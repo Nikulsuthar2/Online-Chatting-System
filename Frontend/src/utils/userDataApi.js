@@ -121,7 +121,7 @@ const sendFriendRequest = async (uid) => {
   }
 };
 
-const cancelFriendRequest = async (uid) => {
+const cancelFriendRequest = async (uid, isUser) => {
  
   if (isLoggedIn) {
     const token = localStorage.getItem("accessToken");
@@ -132,6 +132,7 @@ const cancelFriendRequest = async (uid) => {
           import.meta.env.VITE_BACKEND_URL + "user/cancelfriendrequest",
           {
             id: uid,
+            isUser:isUser
           },
           {
             headers: {

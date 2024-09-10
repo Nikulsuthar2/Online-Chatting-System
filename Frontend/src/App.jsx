@@ -8,6 +8,8 @@ import SigninPage from './pages/SigninPage'
 import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
 import FriendsPage from './pages/FriendsPage'
+import SearchPage from './pages/SearchPage'
+import ChatPage from './pages/ChatPage'
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -21,10 +23,12 @@ const App = () => {
       </Route>
       <Route path='/home' element={<HomeMaster/>}>
         <Route index element={<HomePage/>}/>
+        <Route path='/home/search' element={<SearchPage/>}/>
         <Route path='/home/profile' element={<ProfilePage/>}/>
-        <Route path='/home/profile/:id' element={<ProfilePage/>}/>
         <Route path='/home/friends/:val' element={<FriendsPage/>}/>
       </Route>
+      <Route path='/chat/:id' element={<ChatPage/>}/>
+      
       </>
     )
   )

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { validate } from "email-validator";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
@@ -65,31 +65,35 @@ const LoginPage = () => {
 
   return (
     <div className="h-screen bg-gray-100 flex justify-center items-center gap-2">
+      <Link
+        to={"/"}
+        className="absolute bg-nikblue top-0 left-0 hover:bg-nikblue-light text-white text-md font-bold py-2 px-8 mt-4 ml-4 rounded-xl"
+      >
+        Back to home
+      </Link>
       <form
         onSubmit={handleLogin}
-        className="bg-white flex flex-col gap-2 border-solid border-gray-200 border-2 shadow-lg  rounded-lg p-3 min-w-[300px]"
+        className="bg-white flex flex-col gap-3 border-solid border-gray-200 border-2 shadow-lg  rounded-3xl p-3 min-w-[300px]"
       >
-        <label className="text-center font-bold text-3xl py-4">Login</label>
-        <div className="w-full flex flex-col">
+        <label className="text-center font-bold text-5xl py-6">Login</label>
+        <div className="w-full flex flex-col gap-2">
           <label>Email Address</label>
           <input
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             autoComplete="username"
-            className="bg-gray-100 py-1 px-2 rounded-md"
+            className="bg-gray-100 py-2 px-2 rounded-md border-[1px]"
             type="email"
             required
             placeholder="Enter your email address"
           />
-        </div>
-        <div className="w-full flex flex-col">
           <label>Password</label>
           <input
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             minLength={8}
             autoComplete="current-password"
-            className="bg-gray-100 py-1 px-2 rounded-md"
+            className="bg-gray-100 py-2 px-2 rounded-md border-[1px]"
             type="password"
             required
             placeholder="Enter your password"
@@ -99,27 +103,28 @@ const LoginPage = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-black hover:bg-gray-600 text-white shadow-md font-bold py-2 px-4 mt-4 rounded-md"
+          className="bg-black hover:bg-gray-600 text-white shadow-md font-bold py-2 px-4 rounded-xl active:translate-y-1"
         >
           {isSubmitting ? <PulseLoader color="white" size={10} /> : "Login"}
         </button>
+        <Link to={"/signin"} className="text-center font-bold text-nikblue hover:text-nikblue-light">Don't have an account?</Link>
       </form>
       {alreadyLoggedIn ? (
-        <div className="flex flex-col items-center gap-2 bg-white border-solid border-gray-200 border-2 shadow-lg  rounded-lg p-4">
+        <div className="flex flex-col items-center gap-2 bg-white border-solid border-gray-200 border-2 shadow-lg  rounded-3xl p-3">
           <img
             src={
               import.meta.env.VITE_BACKEND_URL +
               alreadyloginData.profileimg
             }
             alt=""
-            className="object-cover rounded-full aspect-square w-[100px]"
+            className="object-cover rounded-full aspect-square w-[100px] mt-4"
           />
-          <label className="text-2xl font-bold">
+          <label className="text-xl font-semibold">
             {alreadyloginData.username}
           </label>
           <button
             onClick={() => navigate("/home")}
-            className="bg-blue-600 hover:bg-blue-400 text-white shadow-md font-bold py-2 px-4 mt-4 rounded-md"
+            className="bg-blue-600 hover:bg-blue-400 text-white shadow-md font-bold py-2 px-4 rounded-xl active:translate-y-1"
           >
             Continue as {alreadyloginData.username}
           </button>

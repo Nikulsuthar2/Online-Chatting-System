@@ -53,7 +53,7 @@ const sendTextMsg = async (id, message) => {
       import.meta.env.VITE_BACKEND_URL + "chat/sendTextMsg",
       {
         uid: id,
-        msg: message
+        msg: message,
       },
       {
         headers: {
@@ -68,4 +68,27 @@ const sendTextMsg = async (id, message) => {
   }
 };
 
-export { getAllChats, getAllMsgs, sendTextMsg };
+const sendSeenStatus = async (id) => {
+  let token = localStorage.getItem("accessToken");
+  if (isTokenExpired(token)) await refreshAccessToken();
+  token = localStorage.getItem("accessToken");
+  try {
+    const res = await axios.post(
+      import.meta.env.VITE_BACKEND_URL + "chat/setSeenStatus",
+      {
+        id: id,
+      },
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+export { getAllChats, getAllMsgs, sendTextMsg, sendSeenStatus };

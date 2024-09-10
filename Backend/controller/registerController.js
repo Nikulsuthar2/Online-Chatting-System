@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt'
 import User from '../models/userSchema.js';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
+import sharp from 'sharp';
+import path from 'path';
 
 
 const handleNewUser = async (req, res) => {
@@ -11,7 +13,11 @@ const handleNewUser = async (req, res) => {
     const duplicate = await User.findOne({email}).exec();
     if(duplicate) return res.status(409).json({"success":false,"msg":"Email already exist"}); //conflict
 
+    const inputPath = req.file.path;
+    const outputPath = path.join("uploads","profile_images","optimized_"+req.file.filename.split(".")[0]+".jpg");
+
     try {
+        await sharp(inputPath).resize(300,300).jpeg({quality:80}).toFile(outputPath);
         // encrypt the password
         const hashedPWD = await bcrypt.hash(pswd, 10);
 
@@ -21,7 +27,7 @@ const handleNewUser = async (req, res) => {
             "username":username, 
             "email": email,
             "password":hashedPWD,
-            "profileimg":req.file.path,
+            "profileimg":outputPath,
             "friends":[],
             "requests":[]
         };
@@ -34,14 +40,14 @@ const handleNewUser = async (req, res) => {
                     "id":result._id,
                     "username": result.username,
                     "roles": result.roles,
-                    "profileimg":req.file.path
+                    "profileimg":outputPath
                 }
             },
             process.env.ACCESS_TOKEN_SECRAT,
             {expiresIn: '120s'}
         );
         const refreshToken = jwt.sign(
-            {"username": result.username, "id": result._id,"profileimg":req.file.path},
+            {"username": result.username, "id": result._id,"profileimg":outputPath},
             process.env.REQUEST_TOKEN_SECRAT,
             {expiresIn: '1d'}
         ); 
@@ -54,6 +60,7 @@ const handleNewUser = async (req, res) => {
         res.cookie("jwt", refreshToken, {httpOnly:true, sameSite: 'None', secure: true, maxAge: 24*60*60*1000})
         res.status(201).json({"success":true,"msg":"New User Created","token":accessToken});
     } catch (err) {
+        console.log(err)
         res.status(500).json({"success":false,"msg":err.message});
     }   
 }

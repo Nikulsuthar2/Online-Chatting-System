@@ -5,7 +5,18 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors:{
+        gray:{
+          10:"#F5F5F5",
+          150:"#e3e2e2"
+        },
+        nikblue:{
+          DEFAULT:"#2053F8",
+          light:"#537BFF"
+        }
+      }
+    },
   },
   plugins: [],
 }

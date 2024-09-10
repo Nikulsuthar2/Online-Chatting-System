@@ -105,21 +105,32 @@ const handleAddFriendRequest = async (req, res) => {
 };
 
 const handleCancelFriendRequest = async (req, res) => {
-  let id = req.body.id;
+  const id = req.body.id;
+  const isuser = req.body.isUser;
   if (!id)
     return res
       .status(404)
       .json({ result: false, msg: "No ID in friend request" });
   try {
-    const requests = await User.updateOne(
-      { _id: req.user },
-      { $pull: { requests: id.toString()} }
-    ).exec();
+    if(!isuser){
+      await User.updateOne(
+        { _id:  id },
+        { $pull: { requests: req.user} }
+      ).exec();
+    } else {
+      await User.updateOne(
+        { _id: req.user },
+        { $pull: { requests: id} }
+      ).exec();
+    }
+    //console.log(requests)
     res.status(200).json({ result: true, msg: "Friend Request Cancelled" });
   } catch (error) {
+    console.log(error)
     res.status(501).json(error);
   }
 };
+
 
 const handleAcceptFriendRequest = async (req, res) => {
   let { id } = req.body;

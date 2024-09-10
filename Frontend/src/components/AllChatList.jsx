@@ -5,19 +5,15 @@ import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import ChatUserButton from "./ChatUserButton";
 
 const AllChatList = ({
-  width = "w-[30%]",
-  height = "h-full",
+  width = "w-full",
+  height = "h-[90%]",
   chatUsers,
   onChatClick,
 }) => {
   return (
-    <div className={`${width} ${height}`}>
-      <div className="p-3 font-bold box-border h-[10%]">
-        <p>All Chats</p>
-      </div>
-
+    <div className={`${width} ${height} rounded-b-3xl`}>
       {chatUsers !== null && chatUsers.length > 0 ? (
-        <div className="flex flex-col h-[90%] overflow-auto">
+        <div className="flex flex-col gap-2 h-full px-[10px]">
           {chatUsers.map((data, idx) => {
             return (
               <ChatUserButton
@@ -29,7 +25,7 @@ const AllChatList = ({
           })}
         </div>
       ) : (
-        <div className="flex justify-center items-center gap-1 h-[90%] text-xl">
+        <div className="flex justify-center items-center gap-1 h-full text-3xl font-semibold">
           No Chats
         </div>
       )}

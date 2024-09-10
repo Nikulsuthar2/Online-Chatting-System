@@ -19,7 +19,7 @@ const ChatBoxUi = ({ userData, currentUserMsgs }) => {
   const handleSendMessage = async () => {
     if (txtMsg != "") {
       const res = await sendTextMsg(userData._id, txtMsg);
-      console.log(res);
+      //console.log(res);
       setTxtMsg("");
     }
   };
@@ -50,20 +50,20 @@ const ChatBoxUi = ({ userData, currentUserMsgs }) => {
                 <div
                   key={idx}
                   className={
-                    data.isOurMsg
+                    data.isOur
                       ? "flex justify-end pr-2"
                       : "flex justify-start pl-2"
                   }
                 >
                   <div
                     className={`max-w-[70%] p-1 px-3 rounded-xl flex flex-col items-end ${
-                      data.isOurMsg ? "bg-green-200" : "bg-white"
+                      data.isOur ? "bg-green-200" : "bg-white"
                     }`}
                   >
                     <span className="w-full font-medium">{data.msg}</span>
                     <span className="text-[12px] flex items-center gap-2">
                       {format(new Date(data.timeSent), "h:mm a")}
-                      {data.seen == false && data.isOurMsg ? (
+                      {data.seen && data.isOur ? (
                         <IoCheckmarkDoneOutline color="blue" size={15}/>
                       ) : (
                         ""
