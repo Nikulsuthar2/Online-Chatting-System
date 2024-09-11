@@ -12,7 +12,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import UserStatusDot from "../components/UserStatusDot";
 import { MdChat } from "react-icons/md";
-import '../assets/myCustomStyle.css';
+import "../assets/myCustomStyle.css";
+import { PulseLoader } from "react-spinners";
 
 const FriendsPage = () => {
   const { val } = useParams();
@@ -20,8 +21,10 @@ const FriendsPage = () => {
   const [friendsData, setfriendsData] = useState([]);
   const [friendCount, setfriendCount] = useState(0);
   const [requestCount, setRequestCount] = useState(0);
+  const [isloadingData, setIsloadingData] = useState(true);
 
   useEffect(() => {
+    setIsloadingData(true);
     const fetch = async () => {
       const data1 = await getAllFriends();
       if (data1) {
@@ -35,9 +38,10 @@ const FriendsPage = () => {
         setrequestData(data2);
         setRequestCount(data2.length);
       }
+      setIsloadingData(false);
     };
     //fetch();
-    const intervalReq = setInterval(fetch, 3000);
+    const intervalReq = setInterval(fetch, 1500);
 
     return () => clearInterval(intervalReq);
   }, [val]);
@@ -51,9 +55,9 @@ const FriendsPage = () => {
   };
 
   const handleCancelFriendRequest = async (fid) => {
-    console.log(fid)
-    const res = await cancelFriendRequest(fid,true);
-    console.log(res)
+    console.log(fid);
+    const res = await cancelFriendRequest(fid, true);
+    console.log(res);
     const requestd = requestData.filter((req) => req._id !== fid);
     setrequestData(requestd);
     setRequestCount(requestd.length);
@@ -109,8 +113,17 @@ const FriendsPage = () => {
         </div>
       </div>
       <div id="list" className="w-full h-full flex flex-col gap-2 px-[10px]">
-        {val == 0
-          ? friendsData.length == 0 ? <div className="flex justify-center items-center h-full">No Friends</div> : friendsData.map((data, index) => (
+        {val == 0 ? (
+          isloadingData ? (
+            <div className="flex justify-center items-center h-full">
+              <PulseLoader color="black" size={10} />
+            </div>
+          ) : friendsData.length == 0 ? (
+            <div className="flex justify-center items-center h-full">
+              No Friends
+            </div>
+          ) : (
+            friendsData.map((data, index) => (
               <div
                 key={data._id}
                 className="flex justify-between items-center gap-2 p-[5px] border-[1px] rounded-[15px] hover:bg-slate-50"
@@ -122,7 +135,7 @@ const FriendsPage = () => {
                   />
                   <div>
                     <div className="flex gap-2 items-center">
-                      <UserStatusDot status={data.status} isDot={true}/>
+                      <UserStatusDot status={data.status} isDot={true} />
                       <p className="font-bold text-lg">{data.name}</p>
                     </div>
                     <p className="text-sm text-gray-500">@{data.username}</p>
@@ -144,39 +157,50 @@ const FriendsPage = () => {
                 </div>
               </div>
             ))
-          : requestData.length == 0 ? <div className="flex justify-center items-center h-full">No Requests</div> : requestData.map((data, index) => (
-              <div
-                key={data._id}
-                className="flex justify-between items-center gap-2 p-[5px] border-[1px] rounded-[15px] hover:bg-slate-50"
-              >
-                <div className="flex gap-2 items-center">
-                  <img
-                    src={import.meta.env.VITE_BACKEND_URL + data.profileimg}
-                    className="w-[50px]  rounded-xl aspect-square object-cover"
-                  />
-                  <div>
-                    <div className="flex gap-2 items-center">
-                      <p className="font-bold text-lg">{data.name}</p>
-                    </div>
-                    <p className="text-sm text-gray-500">@{data.username}</p>
+          )
+        ) : isloadingData ? (
+          <div className="flex justify-center items-center h-full">
+            <PulseLoader color="black" size={10} />
+          </div>
+        ) : requestData.length == 0 ? (
+          <div className="flex justify-center items-center h-full">
+            No Requests
+          </div>
+        ) : (
+          requestData.map((data, index) => (
+            <div
+              key={data._id}
+              className="flex justify-between items-center gap-2 p-[5px] border-[1px] rounded-[15px] hover:bg-slate-50"
+            >
+              <div className="flex gap-2 items-center">
+                <img
+                  src={import.meta.env.VITE_BACKEND_URL + data.profileimg}
+                  className="w-[50px]  rounded-xl aspect-square object-cover"
+                />
+                <div>
+                  <div className="flex gap-2 items-center">
+                    <p className="font-bold text-lg">{data.name}</p>
                   </div>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={(e) => handleAddFriend(data._id)}
-                    className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] hover:bg-[#dbdbdb] flex justify-center items-center"
-                  >
-                    <FaUserPlus color="black" size={"25px"}/> 
-                  </button>
-                  <button
-                    onClick={(e) => handleCancelFriendRequest(data._id)}
-                    className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] hover:bg-[#dbdbdb] flex justify-center items-center"
-                  >
-                    <FaUserXmark color="black" size={"25px"}/>
-                  </button>
+                  <p className="text-sm text-gray-500">@{data.username}</p>
                 </div>
               </div>
-            ))}
+              <div className="flex gap-2">
+                <button
+                  onClick={(e) => handleAddFriend(data._id)}
+                  className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] hover:bg-[#dbdbdb] flex justify-center items-center"
+                >
+                  <FaUserPlus color="black" size={"25px"} />
+                </button>
+                <button
+                  onClick={(e) => handleCancelFriendRequest(data._id)}
+                  className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] hover:bg-[#dbdbdb] flex justify-center items-center"
+                >
+                  <FaUserXmark color="black" size={"25px"} />
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
       <ToastContainer position="bottom-right" theme="colored" />
     </div>

@@ -66,9 +66,45 @@ const handleGetUserData = async (req, res) => {
   if (!id)
     return res.status(404).json({ result: false, msg: "User not found" });
   try {
-    const user = await User.findOne({ _id: id })
+    const frires = (
+      await User.findById(req.user).select("friends").exec()
+    ).friends.map((ids) => new mongoose.Types.ObjectId(ids));
+    const reqres = (
+      await User.find({ requests: req.user.toString() }).select("_id").exec()
+    ).map((ids) => new mongoose.Types.ObjectId(ids._id));
+    const user = await User.aggregate([
+      {
+        $match: {"_id":new mongoose.Types.ObjectId(id)},
+      },
+      {
+        $addFields: {
+          isFriend: {
+            $in: ["$_id", frires ?? []],
+          },
+          isRequested: {
+            $in: ["$_id", reqres ?? []],
+          },
+          isCurrentUser: {
+            $eq: ["$_id", new mongoose.Types.ObjectId(req.user)],
+          },
+        },
+      },
+      {
+        $project: {
+          email: 0,
+          password: 0,
+          friends: 0,
+          requests: 0,
+          roles: 0,
+          createdAt: 0,
+          __v: 0,
+          refreshToken: 0,
+        },
+      },
+    ]).exec();
+    /*const user = await User.findOne({ _id: id })
       .select({ username: 1, name: 1, profileimg: 1, status: 1, createdAt: 1 })
-      .exec();
+      .exec();*/
     res.status(200).json({ user });
   } catch (error) {
     res.status(501).json(error);

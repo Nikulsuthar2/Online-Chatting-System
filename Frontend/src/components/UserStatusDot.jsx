@@ -8,9 +8,9 @@ const UserStatusDot = ({status, isDot}) => {
        : 
         <div className="rounded-full w-[12px] h-[12px] bg-red-400 shadow-lg shadow-red-400"></div>
       : status ? 
-      <div className="text-green-400">online</div>
+      <div className="text-green-400">Online</div>
      : 
-      <div className="text-red-400">offline</div>
+      <div className="text-red-400">Offline</div>
       }
     </>
   );

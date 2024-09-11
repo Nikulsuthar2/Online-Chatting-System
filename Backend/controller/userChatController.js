@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Chat from "../models/chatSchema.js";
+import Activity from "../models/userActivitySchema.js";
 
 const handleSendTextMessage = async (req, res) => {
   const { uid, msg } = req.body;
@@ -79,15 +80,20 @@ const handleGetAllChats = async (req, res) => {
     //console.log(Data)
     Data.forEach(elem=>{
       elem.newMsg = 0;
+      elem.typing = false;
     })
     const promises = chatUsers.map(async (data) => {
       const res = await Chat.aggregate([
         {$match:{$or:[{senderid: currentUid, receiverid:data},{senderid: data, receiverid:currentUid}]}},
         {$match:{senderid:data,seen:false}},
       ]);
+      const res2 = await Activity.aggregate([
+        {$match:{senderid: data, receiverid:currentUid}},
+      ]);
       Data.forEach(elem=>{
         if(elem.userid.toString() == data.toString()){
           elem.newMsg = res.length;
+          elem.typing = res2[0] ? res2[0].isTyping : false;
         }
       });
     })

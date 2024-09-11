@@ -12,6 +12,7 @@ import userAuthRouter from './routes/userAuthRouter.js';
 import credentials from './middleware/credentials.js';
 import userRouter from './routes/userRoute.js';
 import chatRouter from './routes/chatRoute.js';
+import activityRouter from './routes/activityRoute.js';
 
 const PORT = process.env.PORT ?? 8000;
 
@@ -44,6 +45,7 @@ app.use("/auth", userAuthRouter);
 app.use(verifyJWT);
 app.use("/user", userRouter);
 app.use("/chat", chatRouter);
+app.use("/activity", activityRouter);
 
 app.get("/",(req,res)=>{
     res.send("Welcome to ONLINE CHATING SYSTEM");

@@ -11,6 +11,7 @@ const userSchema = new Schema({
     status: {type:Boolean, default: false},
     friends: {type:[String], default: []},
     requests: {type:[String], default: []},
+    blocked: {type:[String], default: []},
     roles: {type:[String], default:['user']},
     refreshToken: String,
     createdAt: {type:Date, default:Date.now()}

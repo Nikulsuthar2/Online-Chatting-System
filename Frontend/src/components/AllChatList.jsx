@@ -15,12 +15,16 @@ const AllChatList = ({
       {chatUsers !== null && chatUsers.length > 0 ? (
         <div className="flex flex-col gap-2 h-full px-[10px]">
           {chatUsers.map((data, idx) => {
+            
             return (
+              <>
               <ChatUserButton
                 key={idx}
                 data={data}
                 onChatUserClick={onChatClick}
               />
+              {idx == chatUsers.length-1 ? <div key={idx+1} className="text-center">. . .</div> : ""}
+              </>
             );
           })}
         </div>

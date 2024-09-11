@@ -45,8 +45,8 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-[#ffffff29] text-white absolute top-0 left-0 z-10 px-[15px] py-[10px] w-full flex justify-between items-center border-b-[1px] backdrop-blur-md rounded-t-3xl">
-      <Link to={"/home"} className="font-bold text-black text-md outline-none">
+    <nav className="bg-[#ffffff29] text-white absolute top-0 left-0 z-10 px-[10px] py-[10px] w-full flex justify-between items-center border-b-[1px] backdrop-blur-md rounded-t-3xl">
+      <Link to={"/home"} className="h-[40px] px-[20px] font-semibold text-black bg-[#F1F1F1] hover:bg-slate-200 rounded-[15px] flex justify-center items-center cursor-pointer active:translate-y-1 relative">
         {loginData ? loginData.username : "Chat App"}
       </Link>
       <div className="flex gap-[10px]">
