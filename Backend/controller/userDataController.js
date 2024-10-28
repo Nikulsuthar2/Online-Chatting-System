@@ -72,6 +72,12 @@ const handleGetUserData = async (req, res) => {
     const reqres = (
       await User.find({ requests: req.user.toString() }).select("_id").exec()
     ).map((ids) => new mongoose.Types.ObjectId(ids._id));
+    const blockres = (
+      await User.find({ blocked: req.user }).select("_id").exec()
+    ).map((ids) => new mongoose.Types.ObjectId(ids._id));
+    const myblockres =  (
+      await User.findById(req.user).select("blocked").exec()
+    ).blocked.map((ids) => new mongoose.Types.ObjectId(ids));
     const user = await User.aggregate([
       {
         $match: {"_id":new mongoose.Types.ObjectId(id)},
@@ -87,6 +93,12 @@ const handleGetUserData = async (req, res) => {
           isCurrentUser: {
             $eq: ["$_id", new mongoose.Types.ObjectId(req.user)],
           },
+          heBlockedMe: {
+            $in: ["$_id", blockres ?? []],
+          },
+          iBlockedHim: {
+            $in: ["$_id", myblockres ?? []],
+          }
         },
       },
       {
@@ -95,6 +107,7 @@ const handleGetUserData = async (req, res) => {
           password: 0,
           friends: 0,
           requests: 0,
+          blocked:0,
           roles: 0,
           createdAt: 0,
           __v: 0,
@@ -250,6 +263,63 @@ const handleRemoveFriend = async (req, res) => {
   }
 };
 
+const handleBlockUser = async (req, res) => {
+  let { id } = req.body;
+  if (!id)
+    return res
+      .status(404)
+      .json({ result: false, msg: "No ID to block" });
+  try {
+    const blocked = await User.updateOne(
+      { _id: req.user },
+      { $addToSet: { blocked: new mongoose.Types.ObjectId(id) } }
+    ).exec();
+    const request = await User.updateOne(
+      { _id: req.user },
+      { $pull: { requests: new mongoose.Types.ObjectId(id) } }
+    ).exec();
+    res.status(200).json({ result: true, msg: "User blocked Successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(501).json(error);
+  }
+};
+
+const handleUnblockUser = async (req, res) => {
+  let { id } = req.body;
+  if (!id)
+    return res
+      .status(404)
+      .json({ result: false, msg: "No ID to block" });
+  try {
+    const blocked = await User.updateOne(
+      { _id: req.user },
+      { $pull: { blocked: new mongoose.Types.ObjectId(id) } }
+    ).exec();
+    res.status(200).json({ result: true, msg: "User Unblocked Successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(501).json(error);
+  }
+};
+
+const handleGetAllBlockedUser = async (req, res) => {
+  if (!req.user)
+    return res.status(404).json({ result: false, msg: "No ID for blocked list" });
+  try {
+    const resultID = (
+      await User.findById(req.user).select("blocked").exec()
+    ).blocked.map((uid) => new mongoose.Types.ObjectId(uid));
+    //console.log(resultID)
+    const requestusers = await User.find({ _id: { $in: resultID } })
+      .select({ username: 1, name: 1, profileimg: 1, status: 1 })
+      .exec();
+    res.status(200).json(requestusers);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
 export {
   handleSearchUser,
   handleGetUserData,
@@ -260,4 +330,7 @@ export {
   handleGetAllFriendRequest,
   handleGetAllFriends,
   handleRemoveFriend,
+  handleBlockUser,
+  handleUnblockUser,
+  handleGetAllBlockedUser
 };

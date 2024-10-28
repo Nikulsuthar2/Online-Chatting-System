@@ -21,20 +21,18 @@ const ChatUserButton = ({ idx, data, onChatUserClick }) => {
   },[])
   
   return (
-    <div
-      //to={"/home?id=" + data.chatUid._id}
+    <div key={idx}
       onClick={(e) => onChatUserClick(data.userid)}
-      className="p-[10px] flex justify-between items-center bg-white hover:bg-slate-50 border-[1px] rounded-[20px] cursor-pointer"
+      className="p-[5px] flex justify-between items-center bg-white hover:bg-slate-100 border-[1px] rounded-[15px] cursor-pointer"
     >
       <div className="w-[80%] flex gap-2">
         <img
           src={import.meta.env.VITE_BACKEND_URL + data.profileimg}
-          className="w-[50px] h-[50px] object-cover rounded-[15px]"
+          className="w-[50px] h-[50px] object-cover rounded-[10px]"
         />
         <div className="w-[80%] flex flex-col justify-center">
           <span className="flex items-center gap-2 leading-none font-bold">
             <UserStatusDot status={data.status} isDot={true} />
-
             {data.name}
           </span>
           <span className="flex gap-2 items-center justify-between font-semibold w-full">
@@ -49,8 +47,8 @@ const ChatUserButton = ({ idx, data, onChatUserClick }) => {
           </span>
         </div>
       </div>
-      <div className="w-[15%] flex flex-col items-center gap-1">
-        <span className="text-sm font-semibold">
+      <div className="w-[15%] flex flex-col items-end gap-1">
+        <span className="text-xs text-center font-semibold">
           {timeOfMsg}
         </span>
         {data.newMsg > 0 ? (
@@ -58,7 +56,7 @@ const ChatUserButton = ({ idx, data, onChatUserClick }) => {
             {data.newMsg}
           </span>
         ) : (
-          <span className="h-3">
+          <span className="h-3 w-full flex justify-center">
             {data.latestMsgSeen && data.isOur ? (
               <IoCheckmarkDoneOutline color="blue" />
             ) : (

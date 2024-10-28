@@ -266,7 +266,79 @@ const removeFriend = async (uid) => {
   }
 }
 
+const getAllBlockedUser = async () => {
+  let token = localStorage.getItem("accessToken");
+  if (isTokenExpired(token)) await refreshAccessToken();
+  token = localStorage.getItem("accessToken");
+    try {
+      const res = await axios.get(
+        import.meta.env.VITE_BACKEND_URL + "user/getAllBlockedUser",
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return res.data;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+};
 
+const blockUser = async (uid) => {
+  let token = localStorage.getItem("accessToken");
+  if (isTokenExpired(token)) await refreshAccessToken();
+  token = localStorage.getItem("accessToken");
+  if (uid) {
+    try {
+      const res = await axios.post(
+        import.meta.env.VITE_BACKEND_URL + "user/blockuser",
+        {
+          id: uid,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return res.data;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  } else {
+    console.log("uid in block user is ", uid);
+  }
+}
+
+const unblockUser = async (uid) => {
+  let token = localStorage.getItem("accessToken");
+  if (isTokenExpired(token)) await refreshAccessToken();
+  token = localStorage.getItem("accessToken");
+  if (uid) {
+    try {
+      const res = await axios.post(
+        import.meta.env.VITE_BACKEND_URL + "user/unblockuser",
+        {
+          id: uid,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      return res.data;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  } else {
+    console.log("uid in block user is ", uid);
+  }
+}
 
 export {
   getUserStatus,
@@ -279,5 +351,8 @@ export {
   getTotalFriendRequests,
   getAllFriendRequests,
   getAllFriends,
-  removeFriend
+  removeFriend,
+  getAllBlockedUser,
+  blockUser,
+  unblockUser
 };

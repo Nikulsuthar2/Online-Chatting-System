@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import {
   acceptFriendRequest,
   cancelFriendRequest,
+  getAllBlockedUser,
   getAllFriendRequests,
   getAllFriends,
   removeFriend,
@@ -11,7 +12,7 @@ import { FaUserPlus, FaUserMinus, FaUserXmark } from "react-icons/fa6";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import UserStatusDot from "../components/UserStatusDot";
-import { MdChat } from "react-icons/md";
+import { MdBlock, MdChat } from "react-icons/md";
 import "../assets/myCustomStyle.css";
 import { PulseLoader } from "react-spinners";
 
@@ -21,6 +22,7 @@ const FriendsPage = () => {
   const [friendsData, setfriendsData] = useState([]);
   const [friendCount, setfriendCount] = useState(0);
   const [requestCount, setRequestCount] = useState(0);
+  const [blockedData, setBlockedData] = useState([]);
   const [isloadingData, setIsloadingData] = useState(true);
 
   useEffect(() => {
@@ -28,15 +30,17 @@ const FriendsPage = () => {
     const fetch = async () => {
       const data1 = await getAllFriends();
       if (data1) {
-        //console.log("friend",data1);
         setfriendsData(data1);
         setfriendCount(data1.length);
       }
       const data2 = await getAllFriendRequests();
       if (data2) {
-        //console.log("request",data2);
         setrequestData(data2);
         setRequestCount(data2.length);
+      }
+      const data3 = await getAllBlockedUser();
+      if (data3) {
+        setBlockedData(data3);
       }
       setIsloadingData(false);
     };
@@ -75,7 +79,7 @@ const FriendsPage = () => {
     <div className="relative pt-[60px] flex flex-col h-full overflow-y-auto overflow-x-hidden scrollbar-hide rounded-t-3xl">
       <div
         id="header"
-        className="w-full px-[15px] py-[10px] text-md font-semibold"
+        className="w-full px-[10px] py-[10px] text-md font-semibold"
       >
         <div className="flex justify-between gap-[5px] bg-[#F3F3F3] p-[5px] rounded-[15px]">
           <Link
@@ -87,7 +91,7 @@ const FriendsPage = () => {
           >
             Friends
             {friendCount > 0 ? (
-              <div className="rounded-full bg-red-500 px-[5px] text-sm text-white">
+              <div className="rounded-full bg-green-500 px-[5px] text-sm text-white">
                 {friendCount}
               </div>
             ) : (
@@ -105,6 +109,22 @@ const FriendsPage = () => {
             {requestCount > 0 ? (
               <div className="rounded-full bg-blue-500 px-[5px] text-sm text-white">
                 {requestCount}
+              </div>
+            ) : (
+              ""
+            )}
+          </Link>
+          <Link
+            to="/home/friends/2"
+            className={
+              (val == 1 ? "bg-white " : "") +
+              "text-md w-full rounded-[10px] py-1 font-bold hover:bg-white flex justify-center items-center gap-2"
+            }
+          >
+            Blocked
+            {blockedData && blockedData.length > 0 ? (
+              <div className="rounded-full bg-red-500 px-[5px] text-sm text-white">
+                {blockedData.length}
               </div>
             ) : (
               ""
@@ -158,16 +178,60 @@ const FriendsPage = () => {
               </div>
             ))
           )
+        ) : val == 1 ? (
+          isloadingData ? (
+            <div className="flex justify-center items-center h-full">
+              <PulseLoader color="black" size={10} />
+            </div>
+          ) : requestData.length == 0 ? (
+            <div className="flex justify-center items-center h-full">
+              No Requests
+            </div>
+          ) : (
+            requestData.map((data, index) => (
+              <div
+                key={data._id}
+                className="flex justify-between items-center gap-2 p-[5px] border-[1px] rounded-[15px] hover:bg-slate-50"
+              >
+                <div className="flex gap-2 items-center">
+                  <img
+                    src={import.meta.env.VITE_BACKEND_URL + data.profileimg}
+                    className="w-[50px]  rounded-xl aspect-square object-cover"
+                  />
+                  <div>
+                    <div className="flex gap-2 items-center">
+                      <p className="font-bold text-lg">{data.name}</p>
+                    </div>
+                    <p className="text-sm text-gray-500">@{data.username}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={(e) => handleAddFriend(data._id)}
+                    className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] hover:bg-[#dbdbdb] flex justify-center items-center"
+                  >
+                    <FaUserPlus color="black" size={"25px"} />
+                  </button>
+                  <button
+                    onClick={(e) => handleCancelFriendRequest(data._id)}
+                    className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] hover:bg-[#dbdbdb] flex justify-center items-center"
+                  >
+                    <FaUserXmark color="black" size={"25px"} />
+                  </button>
+                </div>
+              </div>
+            ))
+          )
         ) : isloadingData ? (
           <div className="flex justify-center items-center h-full">
             <PulseLoader color="black" size={10} />
           </div>
-        ) : requestData.length == 0 ? (
+        ) : blockedData.length == 0 ? (
           <div className="flex justify-center items-center h-full">
-            No Requests
+            No Blocked USers
           </div>
         ) : (
-          requestData.map((data, index) => (
+          blockedData.map((data, index) => (
             <div
               key={data._id}
               className="flex justify-between items-center gap-2 p-[5px] border-[1px] rounded-[15px] hover:bg-slate-50"
@@ -186,16 +250,10 @@ const FriendsPage = () => {
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={(e) => handleAddFriend(data._id)}
-                  className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] hover:bg-[#dbdbdb] flex justify-center items-center"
+                  onClick={() => handleBlockUser(userData._id)}
+                  className="h-full px-2 py-1 text-sm w-full rounded-full bg-white font-bold text-red-500 flex gap-1 items-center justify-center active:translate-y-1"
                 >
-                  <FaUserPlus color="black" size={"25px"} />
-                </button>
-                <button
-                  onClick={(e) => handleCancelFriendRequest(data._id)}
-                  className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] hover:bg-[#dbdbdb] flex justify-center items-center"
-                >
-                  <FaUserXmark color="black" size={"25px"} />
+                  <MdBlock size={15} /> UnBlock
                 </button>
               </div>
             </div>
