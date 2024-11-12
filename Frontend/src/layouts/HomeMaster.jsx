@@ -40,7 +40,7 @@ const HomeMaster = () => {
 */
   return (
     <div className="h-screen w-full flex justify-center items-center bg-[#F5F5F5]">
-      <div className="relative border-solid bg-white border-gray-200 border-[1px] shadow-lg rounded-3xl min-w-[400px] max-w-[400px] h-[90%]">
+      <div className="relative w-full h-full border-solid bg-white border-gray-200 md:border-[1px] shadow-lg md:rounded-3xl md:min-w-[400px] md:max-w-[400px] md:h-[90%]">
         <Navbar />
         <Outlet />
       </div>

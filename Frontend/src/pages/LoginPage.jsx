@@ -10,6 +10,7 @@ import {
   loginUser,
   refreshAccessToken,
 } from "../utils/userApis";
+import { FaArrowLeft } from "react-icons/fa6";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -64,18 +65,21 @@ const LoginPage = () => {
   }, []);
 
   return (
-    <div className="h-screen bg-gray-100 flex justify-center items-center gap-2">
+    <div className="h-screen overflow-hidden bg-gray-100 flex flex-col md:flex-row md:justify-center items-center gap-2">
       <Link
         to={"/"}
-        className="absolute bg-nikblue top-0 left-0 hover:bg-nikblue-light text-white text-md font-bold py-2 px-8 mt-4 ml-4 rounded-xl"
+        className="absolute hidden md:block bg-nikblue top-0 left-0 hover:bg-nikblue-light text-white text-md font-bold py-2 px-8 mt-4 ml-4 rounded-xl"
       >
         Back to home
       </Link>
       <form
         onSubmit={handleLogin}
-        className="bg-white flex flex-col gap-3 border-solid border-gray-200 border-2 shadow-lg  rounded-3xl p-3 min-w-[300px]"
+        className="h-full w-full overflow-auto md:w-fit md:h-fit bg-white flex flex-col gap-3 border-solid border-gray-200 border-2 shadow-lg rounded-none md:rounded-3xl p-3 md:min-w-[300px]"
       >
-        <label className="text-center font-bold text-5xl py-6">Login</label>
+        <label className="text-center font-bold text-3xl md:text-5xl py-6 flex items-center gap-6">
+          <Link to={"/"} className="block md:hidden bg-black text-white p-2 rounded-md text-xl"><FaArrowLeft/></Link>
+          Login
+        </label>
         <div className="w-full flex flex-col gap-2">
           <label>Email Address</label>
           <input
@@ -110,14 +114,14 @@ const LoginPage = () => {
         <Link to={"/signin"} className="text-center font-bold text-nikblue hover:text-nikblue-light">Don't have an account?</Link>
       </form>
       {alreadyLoggedIn ? (
-        <div className="flex flex-col items-center gap-2 bg-white border-solid border-gray-200 border-2 shadow-lg  rounded-3xl p-3">
+        <div className="w-full md:w-fit flex flex-row md:flex-col justify-between items-center gap-2 bg-white border-solid border-gray-200 border-2 shadow-lg  rounded-3xl p-3">
           <img
             src={
               import.meta.env.VITE_BACKEND_URL +
               alreadyloginData.profileimg
             }
             alt=""
-            className="object-cover rounded-full aspect-square w-[100px] mt-4"
+            className="object-cover rounded-full aspect-square w-[50px] md:w-[100px] mt-0 md:mt-4"
           />
           <label className="text-xl font-semibold">
             {alreadyloginData.username}

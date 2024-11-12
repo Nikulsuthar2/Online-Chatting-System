@@ -102,7 +102,7 @@ const FriendsPage = () => {
             to="/home/friends/1"
             className={
               (val == 1 ? "bg-white " : "") +
-              "text-md w-full rounded-[10px] py-1 font-bold hover:bg-white flex justify-center items-center gap-2"
+              "whitespace-nowrap text-md w-full rounded-[10px] px-2 py-1 font-bold hover:bg-white flex justify-center items-center gap-2"
             }
           >
             Friend Request
@@ -117,7 +117,7 @@ const FriendsPage = () => {
           <Link
             to="/home/friends/2"
             className={
-              (val == 1 ? "bg-white " : "") +
+              (val == 2 ? "bg-white " : "") +
               "text-md w-full rounded-[10px] py-1 font-bold hover:bg-white flex justify-center items-center gap-2"
             }
           >

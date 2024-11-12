@@ -22,20 +22,21 @@ const ChatUserButton = ({ idx, data, onChatUserClick }) => {
   
   return (
     <div key={idx}
+      title={data.name}
       onClick={(e) => onChatUserClick(data.userid)}
-      className="p-[5px] flex justify-between items-center bg-white hover:bg-slate-100 border-[1px] rounded-[15px] cursor-pointer"
+      className="p-[5px] flex justify-between items-center bg-white hover:bg-slate-100 md:border-[1px] border-b-[1px] md:rounded-[15px] cursor-pointer"
     >
       <div className="w-[80%] flex gap-2">
         <img
           src={import.meta.env.VITE_BACKEND_URL + data.profileimg}
           className="w-[50px] h-[50px] object-cover rounded-[10px]"
         />
-        <div className="w-[80%] flex flex-col justify-center">
+        <div className="w-[80%] flex flex-col justify-center gap-1">
           <span className="flex items-center gap-2 leading-none font-bold">
             <UserStatusDot status={data.status} isDot={true} />
             {data.name}
           </span>
-          <span className="flex gap-2 items-center justify-between font-semibold w-full">
+          <span className="flex gap-2 items-center text-sm md:text-base justify-between font-semibold w-full">
             {data.typing ? (
               <span className="font-semibold text-green-400">Typing...</span>
             ) : (
@@ -56,7 +57,7 @@ const ChatUserButton = ({ idx, data, onChatUserClick }) => {
             {data.newMsg}
           </span>
         ) : (
-          <span className="h-3 w-full flex justify-center">
+          <span className="h-3 w-full flex justify-end">
             {data.latestMsgSeen && data.isOur ? (
               <IoCheckmarkDoneOutline color="blue" />
             ) : (

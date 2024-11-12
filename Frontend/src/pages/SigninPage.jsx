@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaRegCircleCheck, FaRegCircleXmark } from "react-icons/fa6";
+import { FaArrowLeft, FaRegCircleCheck, FaRegCircleXmark } from "react-icons/fa6";
 import { createUser, isLoggedIn, isUsernameExist } from "../utils/userApis";
 import { validate } from "email-validator";
 import { toast, ToastContainer } from "react-toastify";
@@ -107,22 +107,23 @@ const SigninPage = () => {
   }, []);
 
   return (
-    <div className="h-screen bg-gray-100 flex justify-center items-center">
+    <div className="h-screen overflow-hidden bg-gray-100 flex justify-center items-center">
       <Link
         to={"/"}
-        className="absolute bg-nikblue top-0 left-0 hover:bg-nikblue-light text-white text-md font-bold py-2 px-8 mt-4 ml-4 rounded-xl"
+        className="absolute hidden md:block bg-nikblue top-0 left-0 hover:bg-nikblue-light text-white text-md font-bold py-2 px-8 mt-4 ml-4 rounded-xl"
       >
         Back to home
       </Link>
       <form
         onSubmit={handleSignin}
-        className="bg-white flex flex-col gap-3 border-solid border-gray-200 border-2 shadow-lg  rounded-3xl p-3  min-w-[400px] max-w-[500px]"
+        className="h-full w-full overflow-auto md:w-fit md:h-fit bg-white flex flex-col gap-3 border-solid border-gray-200 border-2 shadow-lg  rounded-3xl p-3  md:min-w-[400px] md:max-w-[500px]"
       >
-        <label className="text-center font-bold text-5xl py-6">
+        <label className="text-center font-bold text-3xl md:text-5xl py-6 flex items-center gap-6">
+          <Link to={"/"} className="block md:hidden bg-black text-white p-2 rounded-md text-xl"><FaArrowLeft/></Link>
           Create Account
         </label>
-        <div className="flex gap-2 items-end">
-          <div className="w-[50%] flex flex-col gap-1">
+        <div className="flex flex-col-reverse md:flex-row gap-2 items-stretch md:items-end">
+          <div className="w-full md:w-[50%] flex flex-col gap-1">
             <label>Email Address</label>
             <input
               onChange={(e) => setEmail(e.target.value)}
@@ -157,17 +158,17 @@ const SigninPage = () => {
               placeholder="Enter your password"
             />
           </div>
-          <div className="w-[50%] flex flex-col gap-1">
+          <div className="w-full md:w-[50%] flex flex-col gap-1">
             <div className="w-full flex justify-center ">
               <label
                 htmlFor="profileimg"
-                className="aspect-square w-[30%] rounded-3xl"
+                className="aspect-square w-[30%] rounded-full md:rounded-3xl"
               >
                 <img
                   src={DefaultImg}
                   id="proimg"
                   alt="profile image"
-                  className="aspect-square rounded-3xl object-cover"
+                  className="aspect-square rounded-full md:rounded-3xl object-cover"
                   loading="lazy"
                 />
               </label>

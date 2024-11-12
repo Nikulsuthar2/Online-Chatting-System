@@ -34,6 +34,7 @@ const ChatPage = () => {
   const [currentUserMsgs, setCurrentUserMsgs] = useState(null);
   const chatContainerRef = useRef(null);
   const typingTimeoutRef = useRef(null);
+  const chatInputBoxRef = useRef(null);
   const [isTyping, setIsTyping] = useState(false);
   const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
   const [isNewMsgFromOther, setisNewMsgFromOther] = useState(false);
@@ -177,7 +178,7 @@ const ChatPage = () => {
 
   return (
     <div className="h-screen w-full flex justify-center items-center bg-[#F5F5F5]">
-      <div className="relative border-solid bg-white border-gray-200 border-[1px] shadow-lg rounded-3xl min-w-[400px] max-w-[400px] h-[90%]">
+      <div className="relative w-full h-full border-solid bg-white border-gray-200 border-[1px] shadow-lg md:rounded-3xl md:min-w-[400px] md:max-w-[400px] md:h-[90%]">
         {userData ? (
           <nav className="bg-[#ffffffa6] absolute top-0 left-0 z-10 px-[10px] py-[10px] w-full flex justify-between items-center border-b-[1px] backdrop-blur-md rounded-t-3xl">
             <div className="flex gap-[10px] items-center">
@@ -354,7 +355,9 @@ const ChatPage = () => {
           )}
         </div>
         <div className="bg-[#ffffff29] absolute bottom-0 left-0 z-10 px-[15px] py-[10px] w-full flex justify-between items-center gap-[10px] border-t-[1px] backdrop-blur-md rounded-b-3xl">
-          <input
+          <textarea
+            ref={chatInputBoxRef}
+            rows={1}
             type="text"
             value={txtMsg}
             onKeyUp={(e) => handleTypingStatus(userData._id)}
@@ -364,8 +367,8 @@ const ChatPage = () => {
               (userData && userData.iBlockedHim) ||
               (userData && userData.heBlockedMe)
             }
-            className="text-black bg-[#F5F5F5] border-solid border-gray-200 outline-none border-[1px] py-2 px-2 rounded-[10px] w-full"
-          />
+            className="scrollbar-hide resize-none overflow-hidden leading-relaxed text-black bg-[#F5F5F5] border-solid border-gray-200 outline-none border-[1px] py-2 px-2 rounded-[10px] w-full h-auto"
+          ></textarea>
           <button
             onClick={handleSendMessage}
             disabled={
