@@ -320,6 +320,45 @@ const handleGetAllBlockedUser = async (req, res) => {
   }
 };
 
+const handleUpdateProfile = async (req, res) => {
+  if (!req.user)
+    return res.status(404).json({ result: false, msg: "No ID for profile update" });
+  const userId = req.user; // Assuming user ID is available in req.user after authentication
+  const { name, bio } = req.body;
+  let profileimg = null;
+
+  // Check if a file was uploaded
+  if (req.file) {
+    profileimg = req.file.path; // Save the file path
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      $set: {
+        ...(name && { name }),
+        ...(bio && { bio }),
+        ...(profileimg && { profileimg })
+      }
+    },
+    { new: true } // Return the updated document
+  );
+
+  if (!updatedUser) {
+    return res.status(404).json({ result: false, msg: 'User not found.' });
+  }
+
+  res.status(200).json({
+    result: true,
+    msg: 'Profile updated successfully.',
+    user: {
+      name: updatedUser.name,
+      bio: updatedUser.bio,
+      profileimg: updatedUser.profileimg
+    }
+  });
+}
+
 export {
   handleSearchUser,
   handleGetUserData,
@@ -332,5 +371,6 @@ export {
   handleRemoveFriend,
   handleBlockUser,
   handleUnblockUser,
-  handleGetAllBlockedUser
+  handleGetAllBlockedUser,
+  handleUpdateProfile
 };

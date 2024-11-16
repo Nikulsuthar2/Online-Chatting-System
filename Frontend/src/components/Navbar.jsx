@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { decodeJWT, isLoggedIn, logoutUser } from "../utils/userApis";
 import { getTotalFriendRequests, getUserStatus } from "../utils/userDataApi";
 import "react-toastify/ReactToastify.css";
 import { MdExitToApp, MdSearch, MdSupervisorAccount } from "react-icons/md";
+import { UserContext } from "../Context/UserContext";
 
 const Navbar = () => {
+  const { user } = useContext(UserContext);
   const [loginData, setLoginData] = useState(null);
   const [friendRequestCount, setFriendRequestCount] = useState(0);
 
@@ -72,7 +74,7 @@ const Navbar = () => {
         <Link to={"/home/profile"}>
           {loginData ? (
             <img
-              src={import.meta.env.VITE_BACKEND_URL + loginData.profileimg}
+              src={import.meta.env.VITE_BACKEND_URL + user.profileimg}
               alt=""
               className="h-[40px] w-[40px] rounded-[15px] aspect-square object-cover"
             />

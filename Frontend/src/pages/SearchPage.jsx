@@ -87,7 +87,7 @@ const SearchPage = () => {
                     className="flex items-center gap-2 justify-between mx-[10px] p-[5px] rounded-[20px] bg-white hover:bg-slate-50 border-[1px]"
                   >
                     <Link
-                      to={"/home/profile/" + data._id}
+                      to={"/chat/" + data._id}
                       onClick={() => setIsSearching(false)}
                       className="flex items-center gap-2 cursor-pointer overflow-x-hidden"
                     >

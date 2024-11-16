@@ -116,7 +116,7 @@ const SigninPage = () => {
       </Link>
       <form
         onSubmit={handleSignin}
-        className="h-full w-full overflow-auto md:w-fit md:h-fit bg-white flex flex-col gap-3 border-solid border-gray-200 border-2 shadow-lg  rounded-3xl p-3  md:min-w-[400px] md:max-w-[500px]"
+        className="h-full w-full overflow-auto md:w-fit md:h-fit bg-white flex flex-col gap-3 border-solid border-gray-200 md:border-2 shadow-lg md:rounded-3xl p-3  md:min-w-[400px] md:max-w-[500px]"
       >
         <label className="text-center font-bold text-3xl md:text-5xl py-6 flex items-center gap-6">
           <Link to={"/"} className="block md:hidden bg-black text-white p-2 rounded-md text-xl"><FaArrowLeft/></Link>

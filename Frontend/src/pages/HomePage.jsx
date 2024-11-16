@@ -1,12 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import "react-toastify/ReactToastify.css";
 import { getUserData } from "../utils/userDataApi";
 import { getAllChats, getAllMsgs, sendSeenStatus } from "../utils/userChatApi";
 import AllChatList from "../components/AllChatList";
 import '../assets/myCustomStyle.css';
+import { UserContext } from "../Context/UserContext";
 
 const HomePage = () => {
+  const { user, setUser } = useContext(UserContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const [uid, setUid] = useState(null);
   
@@ -22,7 +24,14 @@ const HomePage = () => {
     }
   };
 
+  const handleUserData = async (id) => {
+    const data = await getUserData();
+    //console.log(data.user[0]);
+    setUser(data.user[0]);
+  };
+
   useEffect(() => {
+    handleUserData();
     fetchChatData();
     const interval = setInterval(async () => {
       fetchChatData();

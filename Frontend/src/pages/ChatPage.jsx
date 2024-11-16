@@ -12,20 +12,33 @@ import {
   setUserStatus,
   unblockUser,
 } from "../utils/userDataApi";
-import { MdArrowBack, MdBlock } from "react-icons/md";
+import {
+  MdArrowBack,
+  MdAttachFile,
+  MdBlock,
+  MdCancel,
+  MdReplay,
+  MdReply,
+} from "react-icons/md";
 import {
   getAllChats,
   getAllMsgs,
   sendSeenStatus,
   sendTextMsg,
 } from "../utils/userChatApi";
-import { FaPaperPlane, FaUserMinus, FaUserPlus } from "react-icons/fa6";
+import {
+  FaPaperPlane,
+  FaReply,
+  FaUserMinus,
+  FaUserPlus,
+} from "react-icons/fa6";
 import "../assets/myCustomStyle.css";
 import { format } from "date-fns";
 import UserStatusDot from "../components/UserStatusDot";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { getTypingStatus, sendTypingStatus } from "../utils/userActivityApi";
 import profiledef from "../assets/default_img/profiledef.png";
+import EmojiPicker from "../components/EmojiPicker";
 
 const ChatPage = () => {
   const { id } = useParams();
@@ -39,6 +52,9 @@ const ChatPage = () => {
   const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
   const [isNewMsgFromOther, setisNewMsgFromOther] = useState(false);
   const [newMsgDataFromOther, setnewMsgDataFromOther] = useState(null);
+  const [isReplying, setIsReplying] = useState(false);
+  const [replyData, setReplyData] = useState(null);
+  const [isHighlighted, setIsHighlighted] = useState(false);
 
   const navigate = useNavigate();
 
@@ -91,7 +107,14 @@ const ChatPage = () => {
 
   const handleSendMessage = async () => {
     if (txtMsg != "") {
-      const res = await sendTextMsg(userData._id, txtMsg);
+      const res = await sendTextMsg(
+        userData._id,
+        txtMsg,
+        isReplying,
+        replyData
+      );
+      setIsReplying(false);
+      setReplyData(null);
       //console.log(res);
       setTxtMsg("");
     }
@@ -143,8 +166,40 @@ const ChatPage = () => {
     }
   };
 
+  const addEmoji = (emoji) => {
+    setTxtMsg((prev) => prev + emoji);
+  };
+
+  const reply = (data) => {
+    setIsReplying(true);
+    setReplyData(data);
+    console.log(data);
+  };
+
+  const handleReplyScroll = (id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      let previousSection = section.previousElementSibling.previousElementSibling;
+      // Scroll smoothly to the section
+      //section.scrollIntoView({ behavior: 'smooth' });
+
+      if(previousSection != null)
+        previousSection.scrollIntoView({ behavior: 'smooth' });
+      else if (chatContainerRef.current) {
+        chatContainerRef.current.scrollTop = section.getBoundingClientRect().top;
+      }
+
+      setIsHighlighted(id);
+
+      // Remove the highlight after 2 seconds
+      setTimeout(() => {
+        setIsHighlighted(null);
+      }, 2000);
+    }
+  };
+
   useEffect(() => {
-    setisNewMsgFromOther(false)
+    setisNewMsgFromOther(false);
     sessionStorage.removeItem("msgs");
     const token = localStorage.getItem("accessToken");
     const decoded = decodeJWT(token);
@@ -161,9 +216,7 @@ const ChatPage = () => {
       handleFetchNewChatMsg(id);
     }, 1500);
     return () => clearInterval(interval);
-  }, [,id]);
-
-
+  }, [, id]);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -171,7 +224,6 @@ const ChatPage = () => {
         chatContainerRef.current.scrollHeight;
     }
   }, [currentUserMsgs]);
-
 
   let prevDiff;
   let prevCount = 0;
@@ -325,19 +377,41 @@ const ChatPage = () => {
                   </div>
                   <div
                     key={idx}
-                    className={
-                      data.isOur
-                        ? "flex justify-end pr-2"
-                        : "flex justify-start pl-2"
-                    }
+                    id={data._id}
+                    className={`flex justify-end gap-2 items-center ${
+                      data.isOur ? "flex-row pr-2" : "flex-row-reverse pl-2"
+                    } ${
+                      isHighlighted == data._id ? "bg-gray-200" : "bg-inherit"
+                    }`}
                   >
+                    <button
+                      className="bg-gray-400 text-sm text-white rounded-full p-1"
+                      onClick={() => reply(data)}
+                    >
+                      <FaReply />
+                    </button>
                     <div
-                      className={`max-w-[70%] p-1 px-3 rounded-xl flex flex-col items-end ${
+                      className={`max-w-[70%] p-1 rounded-xl flex flex-col items-end ${
                         data.isOur ? "bg-green-200" : "bg-gray-100"
                       }`}
                     >
-                      <span className="w-full font-medium">{data.msg}</span>
-                      <span className="text-[12px] flex items-center gap-2">
+                      {data.isReply ? (
+                        <div
+                          onClick={() => handleReplyScroll(data.replyData._id)}
+                          className="w-full cursor-pointer mb-1 flex flex-col gap-0 bg-[#99999959] p-2 rounded-[10px] border-l-4 border-green-500"
+                        >
+                          <span className="text-sm text-green-700 font-semibold">
+                            {data.replyData.isOur ? "You" : userData.name}
+                          </span>
+                          <span>{data.replyData.msg}</span>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <span className="px-3 w-full font-medium">
+                        {data.msg}
+                      </span>
+                      <span className="px-3 text-[12px] flex items-center gap-2">
                         {format(new Date(data.timeSent), "h:mm a")}
                         {data.seen && data.isOur ? (
                           <IoCheckmarkDoneOutline color="blue" size={15} />
@@ -354,21 +428,49 @@ const ChatPage = () => {
             "No Message"
           )}
         </div>
-        <div className="bg-[#ffffff29] absolute bottom-0 left-0 z-10 px-[15px] py-[10px] w-full flex justify-between items-center gap-[10px] border-t-[1px] backdrop-blur-md rounded-b-3xl">
-          <textarea
+        <div className="bg-[#ffffff29] absolute bottom-0 left-0 z-10 px-[10px] py-[10px] w-full flex justify-between items-center gap-[10px] border-t-[1px] backdrop-blur-md rounded-b-3xl">
+          <div
             ref={chatInputBoxRef}
-            rows={1}
-            type="text"
-            value={txtMsg}
-            onKeyUp={(e) => handleTypingStatus(userData._id)}
-            onChange={(e) => setTxtMsg(e.target.value)}
-            placeholder="Enter Your Messages..."
-            disabled={
-              (userData && userData.iBlockedHim) ||
-              (userData && userData.heBlockedMe)
-            }
-            className="scrollbar-hide resize-none overflow-hidden leading-relaxed text-black bg-[#F5F5F5] border-solid border-gray-200 outline-none border-[1px] py-2 px-2 rounded-[10px] w-full h-auto"
-          ></textarea>
+            className="flex flex-col gap-2 text-black bg-[#F5F5F5] border-solid border-gray-200  border-[1px] py-2 px-2 rounded-[15px] w-full h-auto"
+          >
+            {isReplying && replyData ? (
+              <div className="flex items-center justify-between gap-2 bg-gray-200 p-2 rounded-[10px] border-l-4 border-green-500">
+                <div className="flex flex-col">
+                  <span className="text-sm text-green-500 font-semibold">
+                    {replyData.isOur ? "You" : userData.name}
+                  </span>
+                  <span>{replyData.msg}</span>
+                </div>
+                <MdCancel
+                  size={25}
+                  onClick={() => {
+                    setIsReplying(false);
+                    setReplyData(null);
+                  }}
+                />
+              </div>
+            ) : (
+              ""
+            )}
+            <div className="flex items-end gap-2 ">
+              <EmojiPicker onEmojiSelect={addEmoji} />
+              <textarea
+                className="scrollbar-hide resize-none overflow-hidden leading-relaxed outline-none w-full bg-transparent"
+                rows={1}
+                type="text"
+                value={txtMsg}
+                onKeyUp={(e) => handleTypingStatus(userData._id)}
+                onChange={(e) => setTxtMsg(e.target.value)}
+                placeholder="Enter Your Messages..."
+                disabled={
+                  (userData && userData.iBlockedHim) ||
+                  (userData && userData.heBlockedMe)
+                }
+              ></textarea>
+              <MdAttachFile />
+            </div>
+          </div>
+
           <button
             onClick={handleSendMessage}
             disabled={
@@ -383,24 +485,24 @@ const ChatPage = () => {
       </div>
       {isNewMsgFromOther ? (
         <Link
-          onClick={()=>navigate("/chat/"+newMsgDataFromOther.userid)}
+          onClick={() => navigate("/chat/" + newMsgDataFromOther.userid)}
           className="w-[20%] absolute bottom-4 right-4 flex flex-col gap-4 p-4 bg-white border-gray-200 border-[1px] shadow-lg rounded-3xl"
         >
           <div className="flex gap-2 justify-between items-center">
             <div className="flex gap-2 items-center">
-            <img
-              src={
-                import.meta.env.VITE_BACKEND_URL +
-                newMsgDataFromOther.profileimg
-              }
-              className="h-[40px] w-[40px] rounded-[15px] aspect-square object-cover"
-            />
-            <div className="flex flex-col">
-              <span className="font-bold">{newMsgDataFromOther.name}</span>
-              <span className="text-sm font-semibold">
-                @{newMsgDataFromOther.username}
-              </span>
-            </div>
+              <img
+                src={
+                  import.meta.env.VITE_BACKEND_URL +
+                  newMsgDataFromOther.profileimg
+                }
+                className="h-[40px] w-[40px] rounded-[15px] aspect-square object-cover"
+              />
+              <div className="flex flex-col">
+                <span className="font-bold">{newMsgDataFromOther.name}</span>
+                <span className="text-sm font-semibold">
+                  @{newMsgDataFromOther.username}
+                </span>
+              </div>
             </div>
             <div className="flex flex-col items-end">
               <span>

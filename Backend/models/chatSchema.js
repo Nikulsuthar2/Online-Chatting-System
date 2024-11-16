@@ -28,6 +28,8 @@ const chatSchema = new Schema({
     receiverid:{type:mongoose.Types.ObjectId, ref:"User", required:true},
     msg: {type:String, default:""},
     msgType: {type:String, default:"Text"},
+    isReply: {type:Boolean, default: false},
+    replyData: {type:Object, default: null},
     seen: {type: Boolean, default: false},
     timeSent: {type: Date, default: Date.now},
     deletedBySender: {type: Boolean, default: false},

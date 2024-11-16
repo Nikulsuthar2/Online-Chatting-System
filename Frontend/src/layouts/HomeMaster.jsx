@@ -6,6 +6,7 @@ import "react-toastify/ReactToastify.css";
 import Navbar from "../components/Navbar";
 import { setUserStatus } from "../utils/userDataApi";
 import { decode } from "punycode";
+import UserProvider from "../Context/UserContext";
 
 const HomeMaster = () => {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ const HomeMaster = () => {
   document.addEventListener("visibilitychange", handleUserStatus);
 */
   return (
+    <UserProvider>
     <div className="h-screen w-full flex justify-center items-center bg-[#F5F5F5]">
       <div className="relative w-full h-full border-solid bg-white border-gray-200 md:border-[1px] shadow-lg md:rounded-3xl md:min-w-[400px] md:max-w-[400px] md:h-[90%]">
         <Navbar />
@@ -46,6 +48,7 @@ const HomeMaster = () => {
       </div>
       <ToastContainer position="bottom-right" theme="colored" />
     </div>
+    </UserProvider>
   );
 };
 

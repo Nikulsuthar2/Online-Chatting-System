@@ -6,6 +6,7 @@ const userSchema = new Schema({
     name: {type: String, default: "User"},
     email: {type: String, required: true},
     phone: {type: String},
+    bio: {type: String, default: "Hi there, I am on NikChat"},
     profileimg: {type: String},
     password: {type: String, required: true},
     status: {type:Boolean, default: false},

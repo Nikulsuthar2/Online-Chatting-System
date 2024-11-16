@@ -6,6 +6,7 @@ import { IoCheckmarkDoneOutline } from "react-icons/io5";
 const ChatUserButton = ({ idx, data, onChatUserClick }) => {
   const [timeOfMsg, setTimeOfMsg] = useState("")
   useEffect(() => {
+    console.log(data)
     const today = new Date();
     const msgDate = new Date(data.latestMsgTimeSent);
     const diff = Math.floor(
@@ -33,7 +34,7 @@ const ChatUserButton = ({ idx, data, onChatUserClick }) => {
         />
         <div className="w-[80%] flex flex-col justify-center gap-1">
           <span className="flex items-center gap-2 leading-none font-bold">
-            <UserStatusDot status={data.status} isDot={true} />
+            {data.isFriend ? <UserStatusDot status={data.status} isDot={true} /> : "" }
             {data.name}
           </span>
           <span className="flex gap-2 items-center text-sm md:text-base justify-between font-semibold w-full">
@@ -41,7 +42,7 @@ const ChatUserButton = ({ idx, data, onChatUserClick }) => {
               <span className="font-semibold text-green-400">Typing...</span>
             ) : (
               <span className="truncate overflow-hidden">
-                {data.isOur ? "You: " : ""}
+                {data.isOur ? data.isReply ? "You Replied: " : "You: " : ""}
                 {data.latestMessage}
               </span>
             )}

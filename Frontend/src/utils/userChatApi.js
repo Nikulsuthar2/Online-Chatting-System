@@ -44,7 +44,7 @@ const getAllMsgs = async (uid) => {
   }
 };
 
-const sendTextMsg = async (id, message) => {
+const sendTextMsg = async (id, message, isReply = false, replyData = null) => {
   let token = localStorage.getItem("accessToken");
   if (isTokenExpired(token)) await refreshAccessToken();
   token = localStorage.getItem("accessToken");
@@ -54,6 +54,8 @@ const sendTextMsg = async (id, message) => {
       {
         uid: id,
         msg: message,
+        isReply: isReply,
+        replyData: replyData
       },
       {
         headers: {

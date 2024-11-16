@@ -340,6 +340,27 @@ const unblockUser = async (uid) => {
   }
 }
 
+const updateProfile = async (data)=> {
+  let token = localStorage.getItem("accessToken");
+  if (isTokenExpired(token)) await refreshAccessToken();
+  token = localStorage.getItem("accessToken");
+  try {
+    const res = await axios.post(
+      import.meta.env.VITE_BACKEND_URL + "user/updateprofile",
+      data,
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+}
+
 export {
   getUserStatus,
   setUserStatus,
@@ -354,5 +375,6 @@ export {
   removeFriend,
   getAllBlockedUser,
   blockUser,
-  unblockUser
+  unblockUser,
+  updateProfile
 };

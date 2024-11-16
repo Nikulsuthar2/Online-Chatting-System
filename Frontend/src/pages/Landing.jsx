@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import chatIcon from '../assets/icons8-chat-96.png';
 
 const Landing = () => {
   return (
     <div className="h-screen overflow-hidden bg-gray-10 flex justify-center items-center">
       <div className="relative w-full md:w-fit h-full md:h-fit">
-        <div className="h-full relative z-20 flex flex-col justify-center items-center bg-[#ffffff55] p-12 gap-6 backdrop-blur-md rounded-none md:rounded-3xl border-none md:border-[1px] border-gray-150">
+        <div className="h-full relative z-20 flex flex-col justify-center items-center bg-[#ffffff55] p-12 gap-6 backdrop-blur-md rounded-none md:rounded-3xl border-[0px] md:border-[1px] border-[##e5e5e5]">
+          <img src={chatIcon} alt="logo"/>
           <label className="text-2xl text-center">😂😍😎😘👍👌🙌</label>
           <label className="text-5xl font-bold text-center">
             Welcome To Chat App
@@ -25,10 +27,10 @@ const Landing = () => {
             </Link>
           </div>
         </div>
-        <span className="absolute -right-24 -top-32 rotate-45 z-0 text-[150px]">
+        <span className="absolute -right-16 -top-16 md:-right-36 md:-top-40 rotate-45 z-0 text-[200px]">
           👌
         </span>
-        <span className="absolute -left-28 -bottom-16 z-0 text-[150px]">
+        <span className="absolute -left-32 md:-left-28 -bottom-16 z-0 text-[250px] md:text-[150px]">
           🤣
         </span>
       </div>

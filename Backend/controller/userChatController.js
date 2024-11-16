@@ -1,15 +1,18 @@
 import mongoose from "mongoose";
 import Chat from "../models/chatSchema.js";
 import Activity from "../models/userActivitySchema.js";
+import User from "../models/userSchema.js";
 
 const handleSendTextMessage = async (req, res) => {
-  const { uid, msg } = req.body;
+  const { uid, msg, isReply, replyData } = req.body;
   if (uid) {
     try {
       const newMsg = {
         senderid: new mongoose.Types.ObjectId(req.user),
         receiverid: new mongoose.Types.ObjectId(uid),
         msg: msg,
+        isReply: isReply,
+        replyData: replyData
       };
       
       const chat = await Chat.create(newMsg);
@@ -25,7 +28,11 @@ const handleGetAllChats = async (req, res) => {
   const uid = req.user;
   const currentUid = new mongoose.Types.ObjectId(uid);
   try {
+    const currentUser = await User.findById(currentUid, 'friends');
+    const friendsList = currentUser?.friends || [];
+
     const chat = await Chat.aggregate([
+      //match where current user id sent or recieve msg
       {$match:{ $or:[{senderid: currentUid},{receiverid: currentUid}]}},
       {$project:{
         otherUser:{
@@ -44,6 +51,7 @@ const handleGetAllChats = async (req, res) => {
         },
         msg:'$msg',
         seen:'$seen',
+        isReply: '$isReply',
         timeSent:'$timeSent'
       }},
       {$sort:{timeSent:-1}},
@@ -52,6 +60,7 @@ const handleGetAllChats = async (req, res) => {
         latestMessage:{$first:'$$ROOT.msg'},
         latestMsgSeen:{$first:'$$ROOT.seen'},
         isOur:{$first:'$$ROOT.isOur'},
+        isReply:{$first:'$$ROOT.isReply'},
         latestMsgTimeSent:{$first:'$$ROOT.timeSent'},
       }},
       {$lookup:{
@@ -61,7 +70,6 @@ const handleGetAllChats = async (req, res) => {
         as:'userDetails'
       }},
       {$unwind:'$userDetails'},
-      {$sort:{'latestMsgTimeSent':-1}},
       {$project:{
         _id:0,
         userid:'$userDetails._id',
@@ -72,8 +80,13 @@ const handleGetAllChats = async (req, res) => {
         latestMessage:'$latestMessage',
         latestMsgSeen:'$latestMsgSeen',
         latestMsgTimeSent:'$latestMsgTimeSent',
-        isOur:'$isOur'
-      }}
+        isOur:'$isOur',
+        isReply: '$isReply',
+        isFriend: {
+          $in: [{ $toString: '$userDetails._id' }, friendsList]
+        }
+      }},
+      {$sort:{'latestMsgTimeSent':-1}}
     ]);
     const chatUsers = chat.map(data=>data.userid);
     const Data = chat;
