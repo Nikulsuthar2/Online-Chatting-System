@@ -93,4 +93,27 @@ const sendSeenStatus = async (id) => {
   }
 };
 
-export { getAllChats, getAllMsgs, sendTextMsg, sendSeenStatus };
+const sendReaction = async (msgid, emoji) => {
+  let token = localStorage.getItem("accessToken");
+  if (isTokenExpired(token)) await refreshAccessToken();
+  token = localStorage.getItem("accessToken");
+  try {
+    const res = await axios.post(
+      import.meta.env.VITE_BACKEND_URL + "chat/reactMsg/"+msgid,
+      {
+        emoji: emoji,
+      },
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+    return res;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+export { getAllChats, getAllMsgs, sendTextMsg, sendSeenStatus, sendReaction };

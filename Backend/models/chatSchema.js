@@ -24,17 +24,23 @@ const chatSchema = new Schema({
 */
 
 const chatSchema = new Schema({
-    senderid:{type:mongoose.Types.ObjectId, ref:"User", required:true},
-    receiverid:{type:mongoose.Types.ObjectId, ref:"User", required:true},
-    msg: {type:String, default:""},
-    msgType: {type:String, default:"Text"},
-    isReply: {type:Boolean, default: false},
-    replyData: {type:Object, default: null},
-    seen: {type: Boolean, default: false},
-    timeSent: {type: Date, default: Date.now},
-    deletedBySender: {type: Boolean, default: false},
-    deletedByReceiver: {type: Boolean, default: false},
+  senderid: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+  receiverid: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+  msg: { type: String, default: "" },
+  msgType: { type: String, default: "Text" },
+  isReply: { type: Boolean, default: false },
+  replyData: { type: Object, default: null },
+  seen: { type: Boolean, default: false },
+  reactions: [
+    {
+      emoji: { type: String }, // Emoji used for the reaction
+      userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // User who reacted
+    },
+  ],
+  timeSent: { type: Date, default: Date.now },
+  deletedBySender: { type: Boolean, default: false },
+  deletedByReceiver: { type: Boolean, default: false },
 });
 
-const Chat = mongoose.model('Chats', chatSchema); 
+const Chat = mongoose.model("Chats", chatSchema);
 export default Chat;

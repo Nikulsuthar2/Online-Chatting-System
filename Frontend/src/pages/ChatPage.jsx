@@ -17,8 +17,6 @@ import {
   MdAttachFile,
   MdBlock,
   MdCancel,
-  MdReplay,
-  MdReply,
 } from "react-icons/md";
 import {
   getAllChats,
@@ -28,17 +26,17 @@ import {
 } from "../utils/userChatApi";
 import {
   FaPaperPlane,
-  FaReply,
   FaUserMinus,
   FaUserPlus,
 } from "react-icons/fa6";
 import "../assets/myCustomStyle.css";
 import { format } from "date-fns";
 import UserStatusDot from "../components/UserStatusDot";
-import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { getTypingStatus, sendTypingStatus } from "../utils/userActivityApi";
 import profiledef from "../assets/default_img/profiledef.png";
 import EmojiPicker from "../components/EmojiPicker";
+import BlockedUserWarning from "../components/BlockedUserWarning";
+import MessageList from "../components/MessageList";
 
 const ChatPage = () => {
   const { id } = useParams();
@@ -54,7 +52,7 @@ const ChatPage = () => {
   const [newMsgDataFromOther, setnewMsgDataFromOther] = useState(null);
   const [isReplying, setIsReplying] = useState(false);
   const [replyData, setReplyData] = useState(null);
-  const [isHighlighted, setIsHighlighted] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -100,6 +98,7 @@ const ChatPage = () => {
 
         //console.log("ya its diffrent");
         setCurrentUserMsgs(res);
+        console.log(res);
         sessionStorage.setItem("msgs", JSON.stringify(res));
       }
     }
@@ -166,36 +165,14 @@ const ChatPage = () => {
     }
   };
 
-  const addEmoji = (emoji) => {
-    setTxtMsg((prev) => prev + emoji);
-  };
-
   const reply = (data) => {
     setIsReplying(true);
     setReplyData(data);
     console.log(data);
   };
 
-  const handleReplyScroll = (id) => {
-    const section = document.getElementById(id);
-    if (section) {
-      let previousSection = section.previousElementSibling.previousElementSibling;
-      // Scroll smoothly to the section
-      //section.scrollIntoView({ behavior: 'smooth' });
-
-      if(previousSection != null)
-        previousSection.scrollIntoView({ behavior: 'smooth' });
-      else if (chatContainerRef.current) {
-        chatContainerRef.current.scrollTop = section.getBoundingClientRect().top;
-      }
-
-      setIsHighlighted(id);
-
-      // Remove the highlight after 2 seconds
-      setTimeout(() => {
-        setIsHighlighted(null);
-      }, 2000);
-    }
+  const addEmoji = (emoji) => {
+    setTxtMsg((prev) => prev + emoji);
   };
 
   useEffect(() => {
@@ -225,18 +202,15 @@ const ChatPage = () => {
     }
   }, [currentUserMsgs]);
 
-  let prevDiff;
-  let prevCount = 0;
-
   return (
-    <div className="h-screen w-full flex justify-center items-center bg-[#F5F5F5]">
-      <div className="relative w-full h-full border-solid bg-white border-gray-200 border-[1px] shadow-lg md:rounded-3xl md:min-w-[400px] md:max-w-[400px] md:h-[90%]">
+    <div className="h-screen w-full flex justify-center items-center bg-[#F5F5F5] dark:bg-[#1a1a1a]">
+      <div className="relative w-full h-full border-solid bg-white border-gray-200 dark:border-[#3f3f3f] border-[1px] shadow-lg md:rounded-3xl overflow-hidden md:min-w-[400px] md:max-w-[400px] md:h-[90%]">
         {userData ? (
-          <nav className="bg-[#ffffffa6] absolute top-0 left-0 z-10 px-[10px] py-[10px] w-full flex justify-between items-center border-b-[1px] backdrop-blur-md rounded-t-3xl">
+          <nav className="bg-[#ffffffa6] dark:bg-[#ffffff29] dark:text-white dark:border-[#3f3f3f] absolute top-0 left-0 z-40 px-[10px] py-[10px] w-full flex justify-between items-center border-b-[1px] backdrop-blur-md">
             <div className="flex gap-[10px] items-center">
               <button
                 onClick={() => navigate("/home")}
-                className="h-[40px] w-[40px] text-white bg-black hover:bg-slate-700 rounded-[15px] flex justify-center items-center cursor-pointer active:translate-y-1"
+                className="h-[40px] w-[40px] text-white dark:text-black bg-black dark:bg-white hover:bg-slate-700 dark:hover:bg-slate-200 rounded-[15px] flex justify-center items-center cursor-pointer active:translate-y-1"
               >
                 <MdArrowBack size={25} />
               </button>
@@ -313,128 +287,17 @@ const ChatPage = () => {
         )}
         <div
           ref={chatContainerRef}
-          className="h-full rounded-3xl overflow-scroll flex flex-col gap-2 pt-[70px] pb-[70px] scrollbar-hide "
+          className="h-full dark:bg-black dark:text-white overflow-scroll flex flex-col gap-2 pt-[70px] pb-[70px] scrollbar-hide "
         >
-          {userData &&
-          !userData.isRequested &&
-          !userData.isFriend &&
-          !userData.iBlockedHim ? (
-            <div className="flex justify-center">
-              <div className="bg-red-500 shadow-xl p-4 rounded-2xl flex gap-2 flex-col">
-                <p className="font-semibold text-white">
-                  {userData.name} is not your friend
-                </p>
-                <div className="flex justify-center items-center gap-2">
-                  <button
-                    onClick={() => handleBlockUser(userData._id)}
-                    className="px-2 py-1 text-sm w-full rounded-full bg-white font-bold text-red-500 flex gap-1 items-center justify-center active:translate-y-1"
-                  >
-                    <MdBlock size={15} /> Block
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
-          {userData && userData.iBlockedHim ? (
-            <div className="h-full flex justify-center items-center font-bold flex-col text-xl">
-              <MdBlock size={100} color="red" />
-              You blocked this user
-            </div>
-          ) : userData && userData.heBlockedMe ? (
-            <div className="h-full flex justify-center items-center font-bold flex-col text-xl">
-              <MdBlock size={100} color="red" />
-              You are blocked by this user
-            </div>
-          ) : currentUserMsgs ? (
-            currentUserMsgs.map((data, idx) => {
-              const today = new Date();
-              const msgDate = new Date(data.timeSent);
-              const diff = Math.floor(
-                (today - msgDate) / (1000 * 60 * 60 * 24)
-              );
-              if (prevDiff != diff) {
-                prevDiff = diff;
-                prevCount = 0;
-              } else {
-                prevCount++;
-              }
-              return (
-                <>
-                  <div className="flex justify-center">
-                    {prevCount == 0 ? (
-                      <span className="bg-blue-200 font-bold rounded-xl py-1 px-3">
-                        {diff == 0
-                          ? "Today"
-                          : diff > 0 && diff < 7
-                          ? format(new Date(data.timeSent), "EEEE")
-                          : format(new Date(data.timeSent), "dd MMMM yyyy")}
-                      </span>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                  <div
-                    key={idx}
-                    id={data._id}
-                    className={`flex justify-end gap-2 items-center ${
-                      data.isOur ? "flex-row pr-2" : "flex-row-reverse pl-2"
-                    } ${
-                      isHighlighted == data._id ? "bg-gray-200" : "bg-inherit"
-                    }`}
-                  >
-                    <button
-                      className="bg-gray-400 text-sm text-white rounded-full p-1"
-                      onClick={() => reply(data)}
-                    >
-                      <FaReply />
-                    </button>
-                    <div
-                      className={`max-w-[70%] p-1 rounded-xl flex flex-col items-end ${
-                        data.isOur ? "bg-green-200" : "bg-gray-100"
-                      }`}
-                    >
-                      {data.isReply ? (
-                        <div
-                          onClick={() => handleReplyScroll(data.replyData._id)}
-                          className="w-full cursor-pointer mb-1 flex flex-col gap-0 bg-[#99999959] p-2 rounded-[10px] border-l-4 border-green-500"
-                        >
-                          <span className="text-sm text-green-700 font-semibold">
-                            {data.replyData.isOur ? "You" : userData.name}
-                          </span>
-                          <span>{data.replyData.msg}</span>
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                      <span className="px-3 w-full font-medium">
-                        {data.msg}
-                      </span>
-                      <span className="px-3 text-[12px] flex items-center gap-2">
-                        {format(new Date(data.timeSent), "h:mm a")}
-                        {data.seen && data.isOur ? (
-                          <IoCheckmarkDoneOutline color="blue" size={15} />
-                        ) : (
-                          ""
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </>
-              );
-            })
-          ) : (
-            "No Message"
-          )}
+          <BlockedUserWarning userData={userData} handleBlockUser={handleBlockUser}/>
+          <MessageList  userData={userData} currentUserMsgs={currentUserMsgs} handleReply={reply}  />
         </div>
-        <div className="bg-[#ffffff29] absolute bottom-0 left-0 z-10 px-[10px] py-[10px] w-full flex justify-between items-center gap-[10px] border-t-[1px] backdrop-blur-md rounded-b-3xl">
+        <div className="bg-[#ffffff29] dark:bg-[#ffffff29] absolute bottom-0 left-0 z-40 px-[10px] py-[10px] w-full flex justify-between items-center gap-[10px] border-t-[1px] dark:border-[#3f3f3f] backdrop-blur-md">
           <div
-            ref={chatInputBoxRef}
-            className="flex flex-col gap-2 text-black bg-[#F5F5F5] border-solid border-gray-200  border-[1px] py-2 px-2 rounded-[15px] w-full h-auto"
+            className="flex flex-col gap-2 text-black bg-[#F5F5F5] dark:bg-[#141414] border-solid border-gray-200 dark:border-[#3f3f3f]  border-[1px] py-2 px-2 rounded-[15px] w-full h-auto"
           >
             {isReplying && replyData ? (
-              <div className="flex items-center justify-between gap-2 bg-gray-200 p-2 rounded-[10px] border-l-4 border-green-500">
+              <div className="flex items-center justify-between gap-2 bg-gray-200 dark:bg-gray-700 dark:text-white p-2 rounded-[10px] border-l-4 border-green-500">
                 <div className="flex flex-col">
                   <span className="text-sm text-green-500 font-semibold">
                     {replyData.isOur ? "You" : userData.name}
@@ -467,7 +330,7 @@ const ChatPage = () => {
                   (userData && userData.heBlockedMe)
                 }
               ></textarea>
-              <MdAttachFile />
+              <MdAttachFile className="text-2xl dark:text-white cursor-pointer" />
             </div>
           </div>
 

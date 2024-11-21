@@ -49,8 +49,8 @@ const HomePage = () => {
   };
 
   return (
-    <div className=" pt-[60px] pb-[10px] flex flex-col h-full rounded-3xl overflow-auto scrollbar-hide">
-      <div id="header" className="bg-white px-[15px] py-[15px] text-md font-semibold">
+    <div className=" pt-[60px] dark:bg-black dark:text-white pb-[10px] flex flex-col h-full overflow-auto scrollbar-hide">
+      <div id="header" className="bg-white dark:bg-black px-[15px] py-[15px] text-md font-semibold">
         All Chats
       </div>
       <AllChatList chatUsers={chatUsers} onChatClick={handleCurrentChat} />

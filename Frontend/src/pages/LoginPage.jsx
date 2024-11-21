@@ -65,7 +65,7 @@ const LoginPage = () => {
   }, []);
 
   return (
-    <div className="h-screen overflow-hidden bg-gray-100 flex flex-col md:flex-row md:justify-center items-center gap-2">
+    <div className="h-screen overflow-hidden bg-gray-100 dark:bg-[#1a1a1a] flex flex-col md:flex-row md:justify-center items-center gap-2">
       <Link
         to={"/"}
         className="absolute hidden md:block bg-nikblue top-0 left-0 hover:bg-nikblue-light text-white text-md font-bold py-2 px-8 mt-4 ml-4 rounded-xl"
@@ -74,10 +74,10 @@ const LoginPage = () => {
       </Link>
       <form
         onSubmit={handleLogin}
-        className="h-full w-full overflow-auto md:w-fit md:h-fit bg-white flex flex-col gap-3 border-solid border-gray-200 border-2 shadow-lg rounded-none md:rounded-3xl p-3 md:min-w-[300px]"
+        className="h-full w-full overflow-auto md:w-fit md:h-fit bg-white dark:bg-black dark:text-white flex flex-col gap-3 border-solid border-gray-200 dark:border-[#3f3f3f] border-[1px] shadow-lg rounded-none md:rounded-3xl p-3 md:min-w-[300px]"
       >
-        <label className="text-center font-bold text-3xl md:text-5xl py-6 flex items-center gap-6">
-          <Link to={"/"} className="block md:hidden bg-black text-white p-2 rounded-md text-xl"><FaArrowLeft/></Link>
+        <label className="md:justify-center font-bold text-3xl md:text-5xl py-6 flex items-center gap-6">
+          <Link to={"/"} className="block md:hidden bg-black dark:bg-white text-white dark:text-black p-2 rounded-md text-xl"><FaArrowLeft/></Link>
           Login
         </label>
         <div className="w-full flex flex-col gap-2">
@@ -86,7 +86,7 @@ const LoginPage = () => {
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             autoComplete="username"
-            className="bg-gray-100 py-2 px-2 rounded-md border-[1px]"
+            className="bg-gray-100 dark:bg-[#1a1a1a] dark:autofill:bg-[#1a1a1a] py-2 px-2 rounded-md border-[1px] dark:border-[#3f3f3f]"
             type="email"
             required
             placeholder="Enter your email address"
@@ -97,7 +97,7 @@ const LoginPage = () => {
             value={password}
             minLength={8}
             autoComplete="current-password"
-            className="bg-gray-100 py-2 px-2 rounded-md border-[1px]"
+            className="bg-gray-100 dark:bg-[#1a1a1a] py-2 px-2 rounded-md border-[1px] dark:border-[#3f3f3f]"
             type="password"
             required
             placeholder="Enter your password"
@@ -107,14 +107,14 @@ const LoginPage = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-black hover:bg-gray-600 text-white shadow-md font-bold py-2 px-4 rounded-xl active:translate-y-1"
+          className="bg-black dark:bg-white hover:bg-gray-600 dark:hover:bg-gray-300 text-white dark:text-black shadow-md font-bold py-2 px-4 rounded-xl active:translate-y-1"
         >
           {isSubmitting ? <PulseLoader color="white" size={10} /> : "Login"}
         </button>
         <Link to={"/signin"} className="text-center font-bold text-nikblue hover:text-nikblue-light">Don't have an account?</Link>
       </form>
       {alreadyLoggedIn ? (
-        <div className="w-full md:w-fit flex flex-row md:flex-col justify-between items-center gap-2 bg-white border-solid border-gray-200 border-2 shadow-lg  rounded-3xl p-3">
+        <div className="w-full md:w-fit flex flex-row md:flex-col justify-between items-center gap-2 bg-white dark:bg-black dark:text-white border-solid border-gray-200 dark:border-[#3f3f3f] border-2 shadow-lg  rounded-3xl p-3">
           <img
             src={
               import.meta.env.VITE_BACKEND_URL +

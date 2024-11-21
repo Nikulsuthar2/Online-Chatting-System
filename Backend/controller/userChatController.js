@@ -159,9 +159,51 @@ const handleSeenStatus = async (req, res) => {
   }
 };
 
+const handleReaction = async (req, res) => {
+  const { messageId } = req.params;
+  const { emoji } = req.body;
+  const userId = req.user;
+
+  try {
+    const message = await Chat.findById(messageId);
+    if (!message) return res.status(404).json({result:false, msg: 'Message not found' });
+
+    // Check if the user has already reacted to the message
+    const existingReactionIndex = message.reactions.findIndex(
+      (reaction) => reaction.userId.toString() === userId
+    );
+
+    if (existingReactionIndex !== -1) {
+      // User has already reacted
+      const existingReaction = message.reactions[existingReactionIndex];
+
+      if (existingReaction.emoji === emoji) {
+        // If the existing reaction is the same as the current one, remove the reaction
+        message.reactions.splice(existingReactionIndex, 1);
+      } else {
+        // If the existing reaction is different, update it with the new emoji
+        message.reactions[existingReactionIndex].emoji = emoji;
+      }
+    } else {
+      // User has not reacted yet, so add the new reaction
+      message.reactions.push({ emoji, userId });
+    }
+
+    // Save the updated message
+    await message.save();
+
+    res.status(200).json({ result:true, msg: 'Reaction updated successfully', data: message });
+  } catch (error) {
+    console.error('Error updating reaction:', error);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+}
+
+
 export {
   handleSendTextMessage,
   handleGetAllChats,
   handleGetMessages,
   handleSeenStatus,
+  handleReaction
 };

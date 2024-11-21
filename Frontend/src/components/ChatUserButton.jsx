@@ -25,7 +25,7 @@ const ChatUserButton = ({ idx, data, onChatUserClick }) => {
     <div key={idx}
       title={data.name}
       onClick={(e) => onChatUserClick(data.userid)}
-      className="p-[5px] flex justify-between items-center bg-white hover:bg-slate-100 md:border-[1px] border-b-[1px] md:rounded-[15px] cursor-pointer"
+      className="p-[5px] flex justify-between items-center bg-white dark:bg-black hover:bg-slate-100 dark:hover:bg-slate-900 dark:border-[#3f3f3f] md:border-[1px] border-b-[1px] md:rounded-[15px] cursor-pointer"
     >
       <div className="w-[80%] flex gap-2">
         <img
@@ -60,7 +60,7 @@ const ChatUserButton = ({ idx, data, onChatUserClick }) => {
         ) : (
           <span className="h-3 w-full flex justify-end">
             {data.latestMsgSeen && data.isOur ? (
-              <IoCheckmarkDoneOutline color="blue" />
+              <IoCheckmarkDoneOutline className="dark:text-blue-400 text-lg text-blue-600"/>
             ) : (
               ""
             )}

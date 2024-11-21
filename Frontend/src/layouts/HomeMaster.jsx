@@ -41,8 +41,8 @@ const HomeMaster = () => {
 */
   return (
     <UserProvider>
-    <div className="h-screen w-full flex justify-center items-center bg-[#F5F5F5]">
-      <div className="relative w-full h-full border-solid bg-white border-gray-200 md:border-[1px] shadow-lg md:rounded-3xl md:min-w-[400px] md:max-w-[400px] md:h-[90%]">
+    <div className="h-screen w-full flex justify-center items-center bg-[#F5F5F5] dark:bg-[#1a1a1a]">
+      <div className="relative w-full h-full border-solid bg-white border-gray-200 dark:border-[#3f3f3f] md:border-[1px] shadow-lg md:rounded-3xl md:min-w-[400px] md:max-w-[400px] md:h-[90%] overflow-hidden">
         <Navbar />
         <Outlet />
       </div>

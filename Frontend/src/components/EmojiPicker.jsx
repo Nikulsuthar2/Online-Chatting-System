@@ -13,15 +13,15 @@ const EmojiPicker = ({ onEmojiSelect }) => {
 
   return (
     <div className="">
-      <button onClick={() => setShowPicker(!showPicker)} className='text-2xl flex justify-center items-center'>
+      <button onClick={() => setShowPicker(!showPicker)} className='text-2xl dark:text-white flex justify-center items-center'>
         {showPicker ? <MdEmojiEmotions /> : <MdOutlineEmojiEmotions/>}
       </button>
       {showPicker && (
-        <div className="absolute bottom-[70px] left-[15px] shadow-2xl">
+        <div className="absolute z-50 bottom-[70px] left-[15px] shadow-2xl">
         <Picker
           data={data}
           onEmojiSelect={handleEmojiClick}
-          theme="light"
+          theme={window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light"}
           navPosition="bottom"
           perLine="8"
         />

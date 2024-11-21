@@ -107,7 +107,7 @@ const SigninPage = () => {
   }, []);
 
   return (
-    <div className="h-screen overflow-hidden bg-gray-100 flex justify-center items-center">
+    <div className="h-screen overflow-hidden bg-gray-100 dark:bg-[#1a1a1a] flex justify-center items-center">
       <Link
         to={"/"}
         className="absolute hidden md:block bg-nikblue top-0 left-0 hover:bg-nikblue-light text-white text-md font-bold py-2 px-8 mt-4 ml-4 rounded-xl"
@@ -116,9 +116,9 @@ const SigninPage = () => {
       </Link>
       <form
         onSubmit={handleSignin}
-        className="h-full w-full overflow-auto md:w-fit md:h-fit bg-white flex flex-col gap-3 border-solid border-gray-200 md:border-2 shadow-lg md:rounded-3xl p-3  md:min-w-[400px] md:max-w-[500px]"
+        className="h-full w-full overflow-auto md:w-fit md:h-fit bg-white dark:bg-black dark:text-white flex flex-col gap-3 border-solid border-gray-200 dark:border-[#3f3f3f] md:border-2 shadow-lg md:rounded-3xl p-3  md:min-w-[400px] md:max-w-[500px]"
       >
-        <label className="text-center font-bold text-3xl md:text-5xl py-6 flex items-center gap-6">
+        <label className="md:justify-center font-bold text-3xl md:text-5xl py-6 flex items-center gap-6">
           <Link to={"/"} className="block md:hidden bg-black text-white p-2 rounded-md text-xl"><FaArrowLeft/></Link>
           Create Account
         </label>
@@ -128,7 +128,7 @@ const SigninPage = () => {
             <input
               onChange={(e) => setEmail(e.target.value)}
               value={email}
-              className="bg-gray-100 py-2 px-2 rounded-md border-[1px]"
+              className="bg-gray-100 dark:bg-[#1a1a1a] py-2 px-2 rounded-md border-[1px] dark:border-[#3f3f3f]"
               type="email"
               name="email"
               autoComplete="true"
@@ -140,7 +140,7 @@ const SigninPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               minLength={8}
-              className="bg-gray-100 py-2 px-2 rounded-md border-[1px]"
+              className="bg-gray-100 dark:bg-[#1a1a1a] py-2 px-2 rounded-md border-[1px] dark:border-[#3f3f3f]"
               type="password"
               name="pswd"
               required
@@ -151,7 +151,7 @@ const SigninPage = () => {
               onChange={(e) => setCpassword(e.target.value)}
               value={cpassword}
               minLength={8}
-              className="bg-gray-100 py-2 px-2 rounded-md border-[1px]"
+              className="bg-gray-100 dark:bg-[#1a1a1a] py-2 px-2 rounded-md border-[1px] dark:border-[#3f3f3f]"
               type="password"
               name="cpswd"
               required
@@ -182,7 +182,7 @@ const SigninPage = () => {
               />
             </div>
             <label>username</label>
-            <div className="flex gap-2 items-center bg-gray-100 py-2 px-2 rounded-md border-[1px]">
+            <div className="flex gap-2 items-center bg-gray-100 dark:bg-[#1a1a1a] py-2 px-2 rounded-md border-[1px] dark:border-[#3f3f3f]">
               <input
                 className="w-full bg-transparent outline-none"
                 value={username}
@@ -227,7 +227,7 @@ const SigninPage = () => {
             <input
               onChange={(e) => setName(e.target.value)}
               value={name}
-              className="bg-gray-100 py-2 px-2 rounded-md border-[1px]"
+              className="bg-gray-100 dark:bg-[#1a1a1a] py-2 px-2 rounded-md border-[1px] dark:border-[#3f3f3f]"
               type="text"
               name="name"
               autoComplete="true"
@@ -240,7 +240,7 @@ const SigninPage = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-black hover:bg-slate-900 text-white shadow-md font-bold py-2 px-4 rounded-xl active:translate-y-1"
+          className="bg-black dark:bg-white hover:bg-gray-600 dark:hover:bg-gray-300 text-white dark:text-black shadow-md font-bold py-2 px-4 rounded-xl active:translate-y-1"
         >
           {isSubmitting ? <PulseLoader color="white" size={10} /> : "Signin"}
         </button>
