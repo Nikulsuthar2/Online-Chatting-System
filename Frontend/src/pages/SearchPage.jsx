@@ -54,10 +54,10 @@ const SearchPage = () => {
   };
 
   return (
-    <div className="relative pt-[60px] flex flex-col h-full">
+    <div className="relative pt-[60px] flex flex-col h-full dark:bg-black">
       <div
         id="header"
-        className="bg-white px-[15px] py-[10px] text-md font-semibold"
+        className="bg-white dark:bg-black px-[15px] py-[10px] text-md font-semibold"
       >
         <input
           type="search"
@@ -68,14 +68,14 @@ const SearchPage = () => {
           //   }}
           value={searchbar}
           placeholder="Search User"
-          className="text-black bg-[#F5F5F5] border-solid border-gray-200 outline-none border-[1px] py-2 px-2 rounded-[10px] w-full"
+          className="text-black dark:text-white bg-[#F5F5F5] dark:bg-[#1d1d1d] border-solid border-gray-200 dark:border-[#3f3f3f] outline-none border-[1px] py-2 px-2 rounded-[10px] w-full"
         />
       </div>
       <div className="h-full">
         {isSearching ? (
           <div id="search-result" className="flex flex-col gap-[5px]">
             {getSearchData.length == 0 ? (
-              <div className="flex p-4 font-bold gap-2 justify-center items-center h-full">
+              <div className="flex p-4 font-bold gap-2 justify-center items-center h-full dark:text-white">
                 No User Found
               </div>
             ) : (
@@ -84,7 +84,7 @@ const SearchPage = () => {
                 .map((data) => (
                   <div
                     key={data._id}
-                    className="flex items-center gap-2 justify-between mx-[10px] p-[5px] rounded-[20px] bg-white hover:bg-slate-50 border-[1px]"
+                    className="flex items-center gap-2 justify-between mx-[10px] p-[5px] rounded-[20px] bg-white dark:bg-black dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 border-[1px] dark:border-[#3f3f3f]"
                   >
                     <Link
                       to={"/chat/" + data._id}

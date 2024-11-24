@@ -53,7 +53,6 @@ const ChatPage = () => {
   const [isReplying, setIsReplying] = useState(false);
   const [replyData, setReplyData] = useState(null);
 
-
   const navigate = useNavigate();
 
   const handleTypingStatus = (uid) => {
@@ -98,7 +97,7 @@ const ChatPage = () => {
 
         //console.log("ya its diffrent");
         setCurrentUserMsgs(res);
-        console.log(res);
+        //console.log(res);
         sessionStorage.setItem("msgs", JSON.stringify(res));
       }
     }
@@ -248,7 +247,7 @@ const ChatPage = () => {
                     {!userData.heBlockedMe ? (
                       <button
                         onClick={() => handleSendFriendRequest(userData._id)}
-                        className="h-[40px] w-[40px] text-black bg-[#F1F1F1] hover:bg-slate-200 rounded-[15px] flex justify-center items-center cursor-pointer active:translate-y-1"
+                        className="h-[40px] w-[40px] text-black dark:text-white bg-[#F1F1F1] dark:bg-black hover:bg-slate-200 dark:hover:bg-slate-700 rounded-[15px] flex justify-center items-center cursor-pointer active:translate-y-1"
                       >
                         <FaUserPlus size={25} />
                       </button>
@@ -257,7 +256,7 @@ const ChatPage = () => {
                     )}
                     <button
                       onClick={() => handleBlockUser(userData._id)}
-                      className="h-[40px] px-2 gap-1 text-white bg-red-500 hover:bg-red-700 rounded-[15px] flex justify-center items-center cursor-pointer active:translate-y-1"
+                      className="h-[40px] px-2 gap-1 text-white bg-red-500 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-900 rounded-[15px] flex justify-center items-center cursor-pointer active:translate-y-1"
                     >
                       <MdBlock size={25} /> Block
                     </button>
@@ -265,7 +264,7 @@ const ChatPage = () => {
                 ) : (
                   <button
                     onClick={() => handleUnBlockUser(userData._id)}
-                    className="h-[40px] px-2 gap-1 text-red-500 bg-gray-100 hover:bg-red-700 rounded-[15px] flex justify-center items-center cursor-pointer active:translate-y-1"
+                    className="h-[40px] px-2 gap-1 text-red-500 bg-gray-100 hover:bg-red-200 rounded-[15px] flex justify-center items-center cursor-pointer active:translate-y-1"
                   >
                     <MdBlock size={25} /> Unblock
                   </button>
@@ -292,7 +291,7 @@ const ChatPage = () => {
           <BlockedUserWarning userData={userData} handleBlockUser={handleBlockUser}/>
           <MessageList  userData={userData} currentUserMsgs={currentUserMsgs} handleReply={reply}  />
         </div>
-        <div className="bg-[#ffffff29] dark:bg-[#ffffff29] absolute bottom-0 left-0 z-40 px-[10px] py-[10px] w-full flex justify-between items-center gap-[10px] border-t-[1px] dark:border-[#3f3f3f] backdrop-blur-md">
+        <div className="bg-[#ffffff29] dark:bg-[#ffffff29] absolute bottom-0 left-0 z-40 px-[10px] py-[10px] w-full flex justify-between items-end gap-[10px] border-t-[1px] dark:border-[#3f3f3f] backdrop-blur-md">
           <div
             className="flex flex-col gap-2 text-black bg-[#F5F5F5] dark:bg-[#141414] border-solid border-gray-200 dark:border-[#3f3f3f]  border-[1px] py-2 px-2 rounded-[15px] w-full h-auto"
           >
@@ -318,12 +317,23 @@ const ChatPage = () => {
             <div className="flex items-end gap-2 ">
               <EmojiPicker onEmojiSelect={addEmoji} />
               <textarea
-                className="scrollbar-hide resize-none overflow-hidden leading-relaxed outline-none w-full bg-transparent"
+                ref={chatInputBoxRef}
+                className="scrollbar-hide resize-none overflow-hidden leading-relaxed outline-none w-full h-auto bg-transparent dark:text-white"
                 rows={1}
                 type="text"
                 value={txtMsg}
                 onKeyUp={(e) => handleTypingStatus(userData._id)}
-                onChange={(e) => setTxtMsg(e.target.value)}
+                onChange={(e) => {
+                  chatInputBoxRef.current.style.height = "auto";
+                  if(chatInputBoxRef.current.scrollHeight <= 130)
+                    chatInputBoxRef.current.style.height = `${chatInputBoxRef.current.scrollHeight}px`;
+                  else{
+                    chatInputBoxRef.current.style.height = "130px";
+                    chatInputBoxRef.current.style.overflowY = "scroll";
+                  }
+                  console.log(e.target.value)
+                  setTxtMsg(e.target.value)
+                }}
                 placeholder="Enter Your Messages..."
                 disabled={
                   (userData && userData.iBlockedHim) ||

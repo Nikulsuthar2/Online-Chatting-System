@@ -68,6 +68,9 @@ const FriendsPage = () => {
   };
 
   const handleRemoveFriend = async (fid) => {
+    if(!confirm("Are you sure")){
+      return ;
+    }
     const res = await removeFriend(fid);
     const friendd = friendsData.filter((req) => req._id !== fid);
     setfriendsData(friendd);
@@ -76,17 +79,17 @@ const FriendsPage = () => {
   };
 
   return (
-    <div className="relative pt-[60px] flex flex-col h-full overflow-y-auto overflow-x-hidden scrollbar-hide rounded-t-3xl">
+    <div className="relative pt-[60px] flex flex-col h-full overflow-y-auto overflow-x-hidden scrollbar-hide dark:bg-black">
       <div
         id="header"
         className="w-full px-[10px] py-[10px] text-md font-semibold"
       >
-        <div className="flex justify-between gap-[5px] bg-[#F3F3F3] p-[5px] rounded-[15px]">
+        <div className="flex justify-between gap-[5px] bg-[#F3F3F3] dark:bg-[#3f3f3f] dark:text-white p-[5px] rounded-[15px]">
           <Link
             to="/home/friends/0"
             className={
-              (val == 0 ? "bg-white " : "") +
-              "text-md w-full rounded-[10px] py-1 font-bold hover:bg-white flex justify-center items-center gap-2"
+              (val == 0 ? "bg-white dark:bg-black " : "") +
+              "text-md w-full rounded-[10px] py-1 font-semibold hover:bg-white dark:hover:bg-black flex justify-center items-center gap-2"
             }
           >
             Friends
@@ -101,8 +104,8 @@ const FriendsPage = () => {
           <Link
             to="/home/friends/1"
             className={
-              (val == 1 ? "bg-white " : "") +
-              "whitespace-nowrap text-md w-full rounded-[10px] px-2 py-1 font-bold hover:bg-white flex justify-center items-center gap-2"
+              (val == 1 ? "bg-white dark:bg-black " : "") +
+              "whitespace-nowrap text-md w-full rounded-[10px] px-2 py-1 font-semibold hover:bg-white dark:hover:bg-black flex justify-center items-center gap-2"
             }
           >
             Friend Request
@@ -117,8 +120,8 @@ const FriendsPage = () => {
           <Link
             to="/home/friends/2"
             className={
-              (val == 2 ? "bg-white " : "") +
-              "text-md w-full rounded-[10px] py-1 font-bold hover:bg-white flex justify-center items-center gap-2"
+              (val == 2 ? "bg-white dark:bg-black " : "") +
+              "text-md w-full rounded-[10px] py-1 font-semibold hover:bg-white dark:hover:bg-black flex justify-center items-center gap-2"
             }
           >
             Blocked
@@ -136,17 +139,17 @@ const FriendsPage = () => {
         {val == 0 ? (
           isloadingData ? (
             <div className="flex justify-center items-center h-full">
-              <PulseLoader color="black" size={10} />
+              <PulseLoader color={window.matchMedia('(prefers-color-scheme: dark)').matches ? "white" : "black"} size={10} />
             </div>
           ) : friendsData.length == 0 ? (
-            <div className="flex justify-center items-center h-full">
+            <div className="flex justify-center items-center dark:text-white h-full">
               No Friends
             </div>
           ) : (
             friendsData.map((data, index) => (
               <div
                 key={data._id}
-                className="flex justify-between items-center gap-2 p-[5px] border-[1px] rounded-[15px] hover:bg-slate-50"
+                className="flex justify-between items-center gap-2 p-[5px] border-[1px] dark:border-[#3f3f3f] rounded-[15px] dark:text-white"
               >
                 <div className="flex gap-2 items-center">
                   <img
@@ -158,15 +161,15 @@ const FriendsPage = () => {
                       <UserStatusDot status={data.status} isDot={true} />
                       <p className="font-bold text-lg">{data.name}</p>
                     </div>
-                    <p className="text-sm text-gray-500">@{data.username}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-300">@{data.username}</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={(e) => handleRemoveFriend(data._id)}
-                    className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] flex justify-center items-center"
+                    className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] dark:bg-[#3f3f3f] dark:text-white dark:hover:bg-gray-700 flex justify-center items-center"
                   >
-                    <FaUserMinus color="black" size={"25px"} />
+                    <FaUserMinus size={"25px"} />
                   </button>
                   <Link
                     to={"/chat/" + data._id}
@@ -181,17 +184,17 @@ const FriendsPage = () => {
         ) : val == 1 ? (
           isloadingData ? (
             <div className="flex justify-center items-center h-full">
-              <PulseLoader color="black" size={10} />
+              <PulseLoader color={window.matchMedia('(prefers-color-scheme: dark)').matches ? "white" : "black"} size={10} />
             </div>
           ) : requestData.length == 0 ? (
-            <div className="flex justify-center items-center h-full">
+            <div className="flex justify-center items-center dark:text-white h-full">
               No Requests
             </div>
           ) : (
             requestData.map((data, index) => (
               <div
                 key={data._id}
-                className="flex justify-between items-center gap-2 p-[5px] border-[1px] rounded-[15px] hover:bg-slate-50"
+                className="flex justify-between items-center gap-2 p-[5px] border-[1px] dark:border-[#3f3f3f] rounded-[15px] dark:text-white"
               >
                 <div className="flex gap-2 items-center">
                   <img
@@ -202,21 +205,21 @@ const FriendsPage = () => {
                     <div className="flex gap-2 items-center">
                       <p className="font-bold text-lg">{data.name}</p>
                     </div>
-                    <p className="text-sm text-gray-500">@{data.username}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-300">@{data.username}</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={(e) => handleAddFriend(data._id)}
-                    className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] hover:bg-[#dbdbdb] flex justify-center items-center"
+                    className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] dark:bg-[#3f3f3f] dark:text-white hover:bg-[#dbdbdb] dark:hover:bg-slate-600 flex justify-center items-center"
                   >
-                    <FaUserPlus color="black" size={"25px"} />
+                    <FaUserPlus size={"25px"} />
                   </button>
                   <button
                     onClick={(e) => handleCancelFriendRequest(data._id)}
-                    className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] hover:bg-[#dbdbdb] flex justify-center items-center"
+                    className="rounded-[10px] w-[50px] h-[50px] bg-[#F1F1F1] dark:bg-[#3f3f3f] dark:text-white hover:bg-[#dbdbdb] dark:hover:bg-slate-600 flex justify-center items-center"
                   >
-                    <FaUserXmark color="black" size={"25px"} />
+                    <FaUserXmark size={"25px"} />
                   </button>
                 </div>
               </div>
@@ -224,10 +227,10 @@ const FriendsPage = () => {
           )
         ) : isloadingData ? (
           <div className="flex justify-center items-center h-full">
-            <PulseLoader color="black" size={10} />
+            <PulseLoader color={window.matchMedia('(prefers-color-scheme: dark)').matches ? "white" : "black"} size={10} />
           </div>
         ) : blockedData.length == 0 ? (
-          <div className="flex justify-center items-center h-full">
+          <div className="flex justify-center dark:text-white items-center h-full">
             No Blocked USers
           </div>
         ) : (
@@ -245,7 +248,7 @@ const FriendsPage = () => {
                   <div className="flex gap-2 items-center">
                     <p className="font-bold text-lg">{data.name}</p>
                   </div>
-                  <p className="text-sm text-gray-500">@{data.username}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-300">@{data.username}</p>
                 </div>
               </div>
               <div className="flex gap-2">

@@ -5,6 +5,10 @@ import ChatReactionBubble from "./ChatReactionBubble";
 import { sendReaction } from "../utils/userChatApi";
 import { FaReply } from "react-icons/fa6";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
+import ReactMarkdowm from "react-markdown";
+import rehypeHighlight from 'rehype-highlight'
+import rehypeRaw from 'rehype-raw'
+import 'highlight.js/styles/atom-one-dark.css'
 
 const MessageList = ({ userData, currentUserMsgs, handleReply }) => {
   const [isHighlighted, setIsHighlighted] = useState(false);
@@ -67,7 +71,7 @@ const MessageList = ({ userData, currentUserMsgs, handleReply }) => {
         </div>
       ) : currentUserMsgs ? (
         currentUserMsgs.map((data, idx) => {
-          //console.log(data)
+          //console.log(data.msg)
           const today = new Date();
           const msgDate = new Date(data.timeSent);
           const diff = Math.floor((today - msgDate) / (1000 * 60 * 60 * 24));
@@ -97,7 +101,11 @@ const MessageList = ({ userData, currentUserMsgs, handleReply }) => {
                 id={data._id}
                 className={`flex justify-end gap-2 items-center ${
                   data.isOur ? "flex-row pr-2" : "flex-row-reverse pl-2"
-                } ${isHighlighted == data._id ? "bg-gray-200 dark:bg-[#3f3f3f]" : "bg-inherit"}`}
+                } ${
+                  isHighlighted == data._id
+                    ? "bg-gray-200 dark:bg-[#3f3f3f]"
+                    : "bg-inherit"
+                }`}
               >
                 <button className="relative bg-gray-400 dark:bg-gray-800 text-sm text-white rounded-full p-1">
                   <MdEmojiEmotions
@@ -119,7 +127,9 @@ const MessageList = ({ userData, currentUserMsgs, handleReply }) => {
                 </button>
                 <div
                   className={`relative max-w-[70%] p-1 rounded-xl flex flex-col items-end ${
-                    data.isOur ? "bg-green-200 dark:bg-gray-800" : "bg-gray-100 dark:bg-[#1f1f1f]"
+                    data.isOur
+                      ? "bg-green-200 dark:bg-gray-800"
+                      : "bg-gray-100 dark:bg-[#1f1f1f]"
                   } ${
                     data.reactions && data.reactions.length > 0 ? "mb-4" : ""
                   }`}
@@ -137,11 +147,16 @@ const MessageList = ({ userData, currentUserMsgs, handleReply }) => {
                   ) : (
                     ""
                   )}
-                  <span className="px-3 w-full font-medium">{data.msg}</span>
-                  <span className="px-3 text-[12px] flex items-center gap-2">
+                  <span className="scrollbar-hide w-full text-black dark:text-white prose dark:prose-invert prose-headings:px-2 prose-headings:mb-2 prose-p:px-2 prose-p:my-2  prose-blockquote:px-2 prose-blockquote:border-black dark:prose-blockquote:border-white prose-pre:mt-0 prose-pre:p-0 prose-pre:bg-black">
+                    <ReactMarkdowm rehypePlugins={[rehypeRaw,rehypeHighlight]}>{data.msg}</ReactMarkdowm>
+                  </span>
+                  <span className="px-2 text-[12px] flex items-center gap-2">
                     {format(new Date(data.timeSent), "h:mm a")}
                     {data.seen && data.isOur ? (
-                      <IoCheckmarkDoneOutline className="text-blue-600 dark:text-blue-400" size={15} />
+                      <IoCheckmarkDoneOutline
+                        className="text-blue-600 dark:text-blue-400"
+                        size={15}
+                      />
                     ) : (
                       ""
                     )}

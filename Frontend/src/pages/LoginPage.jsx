@@ -107,7 +107,7 @@ const LoginPage = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-black dark:bg-white hover:bg-gray-600 dark:hover:bg-gray-300 text-white dark:text-black shadow-md font-bold py-2 px-4 rounded-xl active:translate-y-1"
+          className="bg-black dark:bg-white hover:bg-gray-600 dark:hover:bg-gray-300 dark:disabled:bg-[#3f3f3f] text-white dark:text-black shadow-md font-bold py-2 px-4 rounded-xl active:translate-y-1"
         >
           {isSubmitting ? <PulseLoader color="white" size={10} /> : "Login"}
         </button>
