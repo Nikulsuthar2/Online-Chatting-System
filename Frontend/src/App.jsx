@@ -11,6 +11,7 @@ import FriendsPage from './pages/FriendsPage'
 import SearchPage from './pages/SearchPage'
 import ChatPage from './pages/ChatPage'
 
+
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = createBrowserRouter(

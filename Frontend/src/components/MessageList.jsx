@@ -142,12 +142,12 @@ const MessageList = ({ userData, currentUserMsgs, handleReply }) => {
                       <span className="text-sm text-green-700 dark:text-green-300 font-semibold">
                         {data.replyData.isOur ? "You" : userData.name}
                       </span>
-                      <span>{data.replyData.msg}</span>
+                      <ReactMarkdowm rehypePlugins={[rehypeRaw,rehypeHighlight]}>{data.replyData.msg}</ReactMarkdowm>
                     </div>
                   ) : (
                     ""
                   )}
-                  <span className="scrollbar-hide w-full text-black dark:text-white prose dark:prose-invert prose-headings:px-2 prose-headings:mb-2 prose-p:px-2 prose-p:my-2  prose-blockquote:px-2 prose-blockquote:border-black dark:prose-blockquote:border-white prose-pre:mt-0 prose-pre:p-0 prose-pre:bg-black">
+                  <span className="scrollbar-hide w-full text-black dark:text-white prose dark:prose-invert prose-headings:px-2 prose-headings:mb-2 prose-p:px-2 prose-p:my-2  prose-blockquote:px-2 prose-blockquote:border-black dark:prose-blockquote:border-white prose-pre:mt-0 prose-pre:p-0 prose-pre:bg-black prose-hr:my-2 prose-ol:my-2 prose-ul:my-2">
                     <ReactMarkdowm rehypePlugins={[rehypeRaw,rehypeHighlight]}>{data.msg}</ReactMarkdowm>
                   </span>
                   <span className="px-2 text-[12px] flex items-center gap-2">
@@ -197,7 +197,7 @@ const MessageList = ({ userData, currentUserMsgs, handleReply }) => {
           );
         })
       ) : (
-        "No Message"
+        <div className="flex justify-center items-center h-full">No Message</div>
       )}
     </div>
   );

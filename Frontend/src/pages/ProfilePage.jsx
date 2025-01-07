@@ -73,7 +73,7 @@ const ProfilePage = () => {
   return (
     <>
       {isLoading ? (
-        <div>
+        <div className="pt-14 bg-white w-full dark:bg-black h-full flex justify-center items-center">
           <PulseLoader color={window.matchMedia('(prefers-color-scheme: dark)').matches ? "white" : "black"} size={10} />
         </div>
       ) : (

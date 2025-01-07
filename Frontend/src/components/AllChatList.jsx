@@ -17,14 +17,13 @@ const AllChatList = ({
           {chatUsers.map((data, idx) => {
             
             return (
-              <>
+              <div key={idx}>
               <ChatUserButton
-                key={idx}
                 data={data}
                 onChatUserClick={onChatClick}
               />
               {idx == chatUsers.length-1 ? <div key={idx+1} className="text-center">. . .</div> : ""}
-              </>
+              </div>
             );
           })}
         </div>

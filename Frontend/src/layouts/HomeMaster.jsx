@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import io from 'socket.io-client';
 import { decodeJWT, isLoggedIn, logoutUser } from "../utils/userApis";
 import { Outlet, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -8,11 +9,16 @@ import { setUserStatus } from "../utils/userDataApi";
 import { decode } from "punycode";
 import UserProvider from "../Context/UserContext";
 
+
 const HomeMaster = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     const decoded = decodeJWT(token);
+    console.log(decoded.UserInfo);
+    const socket = io('http://localhost:8080', {
+      auth: { userId:decoded.UserInfo.id, username:decoded.UserInfo.username }, // Pass the user ID here
+    });
     const isLogin = async () => {
       const res = await isLoggedIn(token);
       if (!res) {
@@ -20,6 +26,9 @@ const HomeMaster = () => {
       }
     };
     isLogin();
+    return () => {
+      socket.disconnect(); // Disconnect socket on cleanup
+  };
   }, []);
 
   /*
