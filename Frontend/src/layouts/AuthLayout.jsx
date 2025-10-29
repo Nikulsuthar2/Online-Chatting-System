@@ -3,9 +3,12 @@ import { Link, Outlet } from 'react-router-dom'
 
 const AuthLayout = () => {
   return (
+    <>
+    <div>Auth</div>
     <div>
         <Outlet/>
     </div>
+    </>
   )
 }
 
