@@ -16,7 +16,7 @@ const HomeMaster = () => {
     const token = localStorage.getItem("accessToken");
     const decoded = decodeJWT(token);
     console.log(decoded.UserInfo);
-    const socket = io('http://localhost:8080', {
+    const socket = io(import.meta.env.VITE_BACKEND_URL, {
       auth: { userId:decoded.UserInfo.id, username:decoded.UserInfo.username }, // Pass the user ID here
     });
     const isLogin = async () => {

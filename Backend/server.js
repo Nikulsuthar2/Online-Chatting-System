@@ -28,7 +28,7 @@ const server = http.createServer(app);
 const io = new socketIo(server, {
     // socket server config
     cors: {
-      origin: "http://localhost:5173", // Your frontend's origin
+      origin: "https://nikschat.netlify.app", // Your frontend's origin
       methods: ["GET", "POST"],
       credentials: true,
     },
