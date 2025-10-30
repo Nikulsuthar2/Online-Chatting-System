@@ -82,50 +82,50 @@ app.use((err,req,res,next)=> {
 
 let totalUserLive = 0;
 let connectedUsers = []
-io.on("connection", (socket) => {
-    const userId = socket.handshake.auth.userId; // Access user ID from client
-    console.log(`User connected: ${userId}`);
-    if(!connectedUsers.includes(userId)){
-        connectedUsers.push(userId);
-        totalUserLive++;
-    }
-    console.log("total users live: " + totalUserLive);
+// io.on("connection", (socket) => {
+//     const userId = socket.handshake.auth.userId; // Access user ID from client
+//     console.log(`User connected: ${userId}`);
+//     if(!connectedUsers.includes(userId)){
+//         connectedUsers.push(userId);
+//         totalUserLive++;
+//     }
+//     console.log("total users live: " + totalUserLive);
   
-    // socket.on("sendMessage", ({ sender, receiver, message }) => {
-    //   console.log(`Message from ${sender} to ${receiver}: ${message}`);
-    //   let messages = JSON.parse(fs.readFileSync(messagesFilePath, "utf-8"));
-    //   const newMessage = { sender, receiver, message, timestamp: new Date() };
-    //   messages.push(newMessage);
-    //   fs.writeFileSync(messagesFilePath, JSON.stringify(messages));
+//     // socket.on("sendMessage", ({ sender, receiver, message }) => {
+//     //   console.log(`Message from ${sender} to ${receiver}: ${message}`);
+//     //   let messages = JSON.parse(fs.readFileSync(messagesFilePath, "utf-8"));
+//     //   const newMessage = { sender, receiver, message, timestamp: new Date() };
+//     //   messages.push(newMessage);
+//     //   fs.writeFileSync(messagesFilePath, JSON.stringify(messages));
   
-    //   // Emit the message to the receiver 
-    //   io.to(receiver).emit("receiveMessage", newMessage);
-    // });
+//     //   // Emit the message to the receiver 
+//     //   io.to(receiver).emit("receiveMessage", newMessage);
+//     // });
   
-    // socket.on("join", (username) => {
-    //   const existingUserSocket = Object.keys(connectedUsers).find(
-    //     (key) => connectedUsers[key] === username
-    //   );
+//     // socket.on("join", (username) => {
+//     //   const existingUserSocket = Object.keys(connectedUsers).find(
+//     //     (key) => connectedUsers[key] === username
+//     //   );
   
-    //   if (existingUserSocket) {
-    //     delete connectedUsers[existingUserSocket]; // Remove old user session
-    //   }
-    //   socket.username = username; // Attach the username to the socket
-    //   connectedUsers[socket.id] = username;
-    //   socket.join(username);
-    //   console.log(`${username} joined`);
-    // });
+//     //   if (existingUserSocket) {
+//     //     delete connectedUsers[existingUserSocket]; // Remove old user session
+//     //   }
+//     //   socket.username = username; // Attach the username to the socket
+//     //   connectedUsers[socket.id] = username;
+//     //   socket.join(username);
+//     //   console.log(`${username} joined`);
+//     // });
   
-    socket.on("disconnect", () => {
-      totalUserLive--;
-      console.log('A user disconnected @'+socket.handshake.auth.username);
-      connectedUsers = connectedUsers.filter(item => item !== socket.handshake.auth.userId);
-      // Optionally broadcast to other users that someone has disconnected
-      //io.emit('userDisconnected', { username: disconnectedUsername });
+//     socket.on("disconnect", () => {
+//       totalUserLive--;
+//       console.log('A user disconnected @'+socket.handshake.auth.username);
+//       connectedUsers = connectedUsers.filter(item => item !== socket.handshake.auth.userId);
+//       // Optionally broadcast to other users that someone has disconnected
+//       //io.emit('userDisconnected', { username: disconnectedUsername });
   
-      //delete connectedUsers[socket.id];
-    });
-  });
+//       //delete connectedUsers[socket.id];
+//     });
+//   });
 
 mongoose.connection.once('open', ()=>{
     console.log("connected to mongoDB");
