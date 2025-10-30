@@ -74,27 +74,26 @@ const isTokenExpired = (token) => {
 }
 
 const refreshAccessToken = async () => {
-    await axios.post(import.meta.env.VITE_BACKEND_URL +"auth/refreshtoken",{},{withCredentials:true})
-    .then(res=>{
-        if(res.statusText === 'OK'){
-            localStorage.setItem('accessToken',res.data.accessToken);
+    try {
+        const res = await axios.post(import.meta.env.VITE_BACKEND_URL +"auth/refreshtoken",{},{withCredentials:true});
+
+        if (res.status === 200 && res.data?.accessToken) {
+            localStorage.setItem('accessToken', res.data.accessToken);
             return true;
         }
         return false;
-    })
-    .catch(error=>{
-        return false;
-    });
-    return false;
+    } catch (error) {
+        console.log("Error refreshing access token:", error);
+        return false;   
+    }
 }
 
 const isLoggedIn = async (token) => {
     if(token && !isTokenExpired(token)){
         return true;
     } else if (token && isTokenExpired(token)) {
-        await refreshAccessToken().then(success=>{
-            return success;
-        })
+        const success = await refreshAccessToken();
+        return success;
     }
     return false;
 }
