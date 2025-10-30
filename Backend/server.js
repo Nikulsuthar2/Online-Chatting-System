@@ -25,18 +25,18 @@ const __dirname = path.dirname(__filename);
 connectDB();
 const app = express();
 const server = http.createServer(app);
-const io = new socketIo(server, {
-    // socket server config
-    cors: {
-      origin: "https://nikschat.netlify.app", // Your frontend's origin
-      methods: ["GET", "POST"],
-      credentials: true,
-    },
-  });
+// const io = new socketIo(server, {
+//     // socket server config
+//     cors: {
+//       origin: "https://nikschat.netlify.app", // Your frontend's origin
+//       methods: ["GET", "POST"],
+//       credentials: true,
+//     },
+//   });
 
-app.get("/reqreader",(req, res)=> {
-    res.send(req.headers);
-})
+// app.get("/reqreader",(req, res)=> {
+//     res.send(req.headers);
+// })
 
 // cors and cookie configuration
 app.use(credentials);
@@ -46,8 +46,6 @@ app.use(cookieParser());
 // enble request body parsing or reading
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
-
-const dirPath = path.join(__dirname, 'uploads');
 
 // Check if directory exists
 try {

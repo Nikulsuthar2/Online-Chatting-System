@@ -6,6 +6,7 @@ const verifyJWT = (req, res, next) => {
     if(!authHeader) return res.status(401).json({msg:"auth header not found"});
     if(authHeader.startsWith("Bearer")){
         authHeader = authHeader.split(" ")[1];
+        console.log("Token extracted from Bearer"+authHeader);
     }
     const token = authHeader;
     jwt.verify(
@@ -15,7 +16,7 @@ const verifyJWT = (req, res, next) => {
             if (err) console.log(err);
             if (err) return res.sendStatus(403); // forbidden
             req.user = decoded.UserInfo.id;
-            //console.log(decoded.UserInfo.id);
+            console.log(decoded.UserInfo.id);
             next();
         }
     )
