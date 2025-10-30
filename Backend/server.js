@@ -52,8 +52,10 @@ const dirPath = path.join(__dirname, 'uploads');
 // Check if directory exists
 try {
   // Check if directory exists, create if not
-  await fs.promises.mkdir(path.join(__dirname, 'uploads'), { recursive: true });
+  const uploadPath = path.join(__dirname, 'uploads');
   await fs.promises.mkdir(path.join(__dirname, 'public'), { recursive: true });
+  await fs.promises.mkdir(uploadPath, { recursive: true });
+  await fs.promises.mkdir(path.join(uploadPath, 'profile_images'), { recursive: true });
 } catch (err) {
   console.error('Error creating directory:', err);
   res.status(500).send('file directory not created');
