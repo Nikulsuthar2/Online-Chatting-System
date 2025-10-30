@@ -5,7 +5,7 @@ const AuthLayout = () => {
   return (
     <>
     {/* <div>Auth</div> */}
-    <div>
+    <div className='h-[100dvh]'>
         <Outlet/>
     </div>
     </>
