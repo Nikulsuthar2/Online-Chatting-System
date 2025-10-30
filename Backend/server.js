@@ -38,7 +38,9 @@ const server = http.createServer(app);
 //     res.send(req.headers);
 // })
 
-
+// upload directory public access
+app.use(express.static(path.join(__dirname,"public")));
+app.use("/uploads",express.static(path.join(__dirname,"uploads/")));
 
 // cors and cookie configuration
 app.use(credentials);
@@ -61,9 +63,7 @@ try {
   res.status(500).send('file directory not created');
 }
 
-// upload directory public access
-app.use(express.static(path.join(__dirname,"public")));
-app.use("/uploads",express.static(path.join(__dirname,"uploads/")));
+
 
 // custom routes
 app.use("/auth", userAuthRouter);
