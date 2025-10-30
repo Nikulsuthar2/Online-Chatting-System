@@ -4,7 +4,7 @@ import chatIcon from '../assets/icons8-chat-96.png';
 
 const Landing = () => {
   return (
-    <div className="h-screen overflow-hidden dark:bg-[#1a1a1a] bg-gray-10 flex justify-center items-center">
+    <div className="h-full overflow-hidden dark:bg-[#1a1a1a] bg-gray-10 flex justify-center items-center">
       <div className="relative w-full md:w-fit h-full md:h-fit">
         <div className="h-full relative z-20 flex flex-col justify-center items-center bg-[#ffffff55] dark:bg-[#3b3b3b55] p-12 gap-6 backdrop-blur-md rounded-none md:rounded-3xl border-[0px] md:border-[1px] border-[#e5e5e5] dark:border-[#373636] dark:text-white">
           <img src={chatIcon} alt="logo"/>

@@ -202,7 +202,7 @@ const ChatPage = () => {
   }, [currentUserMsgs]);
 
   return (
-    <div className="h-screen w-full flex justify-center items-center bg-[#F5F5F5] dark:bg-[#1a1a1a]">
+    <div className="h-[100dvh] w-full flex justify-center items-center bg-[#F5F5F5] dark:bg-[#1a1a1a]">
       <div className="relative w-full h-full border-solid bg-white border-gray-200 dark:border-[#3f3f3f] border-[1px] shadow-lg md:rounded-3xl overflow-hidden md:min-w-[400px] md:max-w-[400px] md:h-[90%]">
         {userData ? (
           <nav className="bg-[#ffffffa6] dark:bg-[#ffffff29] dark:text-white dark:border-[#3f3f3f] absolute top-0 left-0 z-40 px-[10px] py-[10px] w-full flex justify-between items-center border-b-[1px] backdrop-blur-md">

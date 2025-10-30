@@ -65,7 +65,7 @@ const LoginPage = () => {
   }, []);
 
   return (
-    <div className="h-screen overflow-hidden bg-gray-100 dark:bg-[#1a1a1a] flex flex-col md:flex-row md:justify-center items-center gap-2">
+    <div className="h-full overflow-hidden bg-gray-100 dark:bg-[#1a1a1a] flex flex-col md:flex-row md:justify-center items-center gap-2">
       <Link
         to={"/"}
         className="absolute hidden md:block bg-nikblue top-0 left-0 hover:bg-nikblue-light text-white text-md font-bold py-2 px-8 mt-4 ml-4 rounded-xl"
