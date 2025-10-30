@@ -37,7 +37,7 @@ const handleLogin = async (req, res) => {
         const result = await foundUser.save();
         //console.log(result);
 
-        res.cookie("jwt", refreshToken, {httpOnly:true, sameSite: 'None', secure: true, maxAge: 7*24*60*60*1000})
+        res.cookie("jwt", refreshToken, {httpOnly:true, secure: true, sameSite: 'None', path: '/', maxAge: 7*24*60*60*1000})
         res.json({"success":true, "token": accessToken ,"msg":`User ${foundUser.username} is logged in`})
     } else {
         res.status(401).json({"success":false, "msg":"Username or password are incorrect"});
