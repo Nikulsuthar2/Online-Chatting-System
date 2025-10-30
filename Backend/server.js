@@ -2,6 +2,7 @@ import 'dotenv/config'
 import express from 'express';
 import http from 'http';
 import url from 'url'
+import fs from 'fs';
 import path from 'path'
 import cors from 'cors';
 import { Server as socketIo } from "socket.io";
@@ -45,6 +46,18 @@ app.use(cookieParser());
 // enble request body parsing or reading
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
+
+const dirPath = path.join(__dirname, 'uploads');
+
+// Check if directory exists
+try {
+  // Check if directory exists, create if not
+  await fs.promises.mkdir(path.join(__dirname, 'uploads'), { recursive: true });
+  await fs.promises.mkdir(path.join(__dirname, 'public'), { recursive: true });
+} catch (err) {
+  console.error('Error creating directory:', err);
+  res.status(500).send('file directory not created');
+}
 
 // upload directory public access
 app.use(express.static(path.join(__dirname,"public")));
